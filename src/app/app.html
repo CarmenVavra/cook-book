@@ -6,9 +6,13 @@
 
   <nav class="nav-links">
     <a mat-button routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">Start</a>
-    <a mat-button routerLink="/category" routerLinkActive="active-link">Kategorien</a>
-    <a mat-button routerLink="/country" routerLinkActive="active-link">Länder</a>
-    <a mat-button routerLink="/type" routerLinkActive="active-link">Typen</a>
+    <a mat-button routerLink="/recipes" routerLinkActive="active-link">Rezepte</a>
+    @if (auth && (auth.isAuthenticated$ | async)) {
+      <a mat-button routerLink="/category" routerLinkActive="active-link">Kategorien</a>
+      <a mat-button routerLink="/country" routerLinkActive="active-link">Länder</a>
+      <a mat-button routerLink="/type" routerLinkActive="active-link">Typen</a>
+      <a mat-button routerLink="/my-recipes" routerLinkActive="active-link">Meine Rezepte</a>
+    }
   </nav>
 
   <span class="spacer"></span>

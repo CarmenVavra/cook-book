@@ -1,6 +1,9 @@
-import { Component, DestroyRef, effect, inject, input, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, DestroyRef, PLATFORM_ID, effect, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '@auth0/auth0-angular';
+import { of } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -21,9 +24,13 @@ export class RecipeDetail {
   readonly loading = signal(true);
   readonly error = signal(false);
 
+  protected auth: AuthService | null = isPlatformBrowser(inject(PLATFORM_ID)) ? inject(AuthService) : null;
+  #currentUser = toSignal(this.auth?.user$ ?? of(null), { initialValue: null });
+
   #recipeService = inject(RecipeService);
   #logger = inject(LoggerService);
   #destroyRef = inject(DestroyRef);
+  #router = inject(Router);
 
   constructor() {
     effect(() => {
@@ -33,6 +40,29 @@ export class RecipeDetail {
 
   reload(): void {
     this.load(Number(this.id()));
+  }
+
+  isOwner(): boolean {
+    const sub = this.#currentUser()?.sub;
+    return !!sub && this.recipe()?.ownerSub === sub;
+  }
+
+  deleteRecipe(): void {
+    const recipe = this.recipe();
+    if (!recipe) return;
+    if (!window.confirm(`"${recipe.title}" wirklich löschen?`)) {
+      return;
+    }
+
+    this.#recipeService.delete(recipe.id)
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        next: () => this.#router.navigateByUrl('/recipes'),
+        error: (error) => {
+          this.#logger.error('Failed to delete recipe', error);
+          window.alert('Löschen fehlgeschlagen. Bitte versuche es später erneut.');
+        },
+      });
   }
 
   private load(id: number): void {

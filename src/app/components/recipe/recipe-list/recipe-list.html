@@ -32,6 +32,11 @@
           @if (recipe.countryName) {
             <span class="row-badge">{{ recipe.countryName }}</span>
           }
+          @if (isOwner(recipe)) {
+            <button mat-icon-button type="button" (click)="$event.preventDefault(); $event.stopPropagation(); deleteRecipe(recipe)" aria-label="Löschen">
+              <mat-icon>delete</mat-icon>
+            </button>
+          }
           <mat-icon class="row-chevron">chevron_right</mat-icon>
         </a>
       }

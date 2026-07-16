@@ -7,11 +7,13 @@ import { RecipeTypes } from './components/recipe/recipe-types/recipe-types';
 import { RecipeCategories } from './components/recipe/recipe-categories/recipe-categories';
 import { RecipeList } from './components/recipe/recipe-list/recipe-list';
 import { RecipeDetail } from './components/recipe/recipe-detail/recipe-detail';
+import { MyRecipes } from './components/recipe/my-recipes/my-recipes';
 
 export const routes: Routes = [
   { path: "category", component: Category },
   { path: "country", component: Country },
   { path: "type", component: Type },
+  { path: "my-recipes", component: MyRecipes },
   { path: "recipes/type/:typeId/category/:categoryId", component: RecipeList },
   { path: "recipes/type/:typeId", component: RecipeCategories },
   { path: "recipes/:id", component: RecipeDetail },

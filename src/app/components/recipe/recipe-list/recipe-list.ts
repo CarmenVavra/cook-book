@@ -1,6 +1,9 @@
-import { Component, DestroyRef, computed, effect, inject, input, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, DestroyRef, PLATFORM_ID, computed, effect, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '@auth0/auth0-angular';
+import { of } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -31,6 +34,9 @@ export class RecipeList {
     return '';
   });
 
+  protected auth: AuthService | null = isPlatformBrowser(inject(PLATFORM_ID)) ? inject(AuthService) : null;
+  #currentUser = toSignal(this.auth?.user$ ?? of(null), { initialValue: null });
+
   #recipeService = inject(RecipeService);
   #logger = inject(LoggerService);
   #destroyRef = inject(DestroyRef);
@@ -43,6 +49,27 @@ export class RecipeList {
 
   reload(): void {
     this.load(Number(this.typeId()), Number(this.categoryId()));
+  }
+
+  isOwner(recipe: RecipeSummary): boolean {
+    const sub = this.#currentUser()?.sub;
+    return !!sub && recipe.ownerSub === sub;
+  }
+
+  deleteRecipe(recipe: RecipeSummary): void {
+    if (!window.confirm(`"${recipe.title}" wirklich löschen?`)) {
+      return;
+    }
+
+    this.#recipeService.delete(recipe.id)
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        next: () => this.reload(),
+        error: (error) => {
+          this.#logger.error('Failed to delete recipe', error);
+          window.alert('Löschen fehlgeschlagen. Bitte versuche es später erneut.');
+        },
+      });
   }
 
   private load(typeId: number, categoryId: number): void {

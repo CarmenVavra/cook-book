@@ -16,6 +16,7 @@ export interface RecipeSummary {
   typeId: number | null;
   typeName: string | null;
   categories: CategoryRef[];
+  ownerSub: string | null;
 }
 
 export interface RecipeDetail extends RecipeSummary {

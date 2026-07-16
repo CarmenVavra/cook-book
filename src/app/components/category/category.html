@@ -15,10 +15,12 @@
 } @else {
   <div class="page-header">
     <h1 class="page-title">Kategorien</h1>
-    <button mat-raised-button color="primary" type="button" (click)="openCreateDialog()">
-      <mat-icon>add</mat-icon>
-      Neue Kategorie
-    </button>
+    @if (auth && (auth.isAuthenticated$ | async)) {
+      <button mat-raised-button color="primary" type="button" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon>
+        Neue Kategorie
+      </button>
+    }
   </div>
 
   @if (rows().length === 0) {

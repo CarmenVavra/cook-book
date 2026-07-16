@@ -15,10 +15,12 @@
 } @else {
   <div class="page-header">
     <h1 class="page-title">Typen</h1>
-    <button mat-raised-button color="primary" type="button" (click)="openCreateDialog()">
-      <mat-icon>add</mat-icon>
-      Neuer Typ
-    </button>
+    @if (auth && (auth.isAuthenticated$ | async)) {
+      <button mat-raised-button color="primary" type="button" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon>
+        Neuer Typ
+      </button>
+    }
   </div>
 
   @if (types().length === 0) {

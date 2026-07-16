@@ -12,8 +12,16 @@
   text-decoration: underline;
 }
 
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
 .page-title {
-  margin: 0 0 12px;
+  margin: 0;
   font: var(--mat-sys-headline-medium);
 }
 

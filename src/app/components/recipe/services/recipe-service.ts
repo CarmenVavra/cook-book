@@ -30,4 +30,8 @@ export class RecipeService {
   getById(id: number): Observable<RecipeDetail> {
     return this.#http.get<RecipeDetail>(`${this.baseUrl}?id=${id}`);
   }
+
+  delete(id: number): Observable<void> {
+    return this.#http.delete<void>(`${this.baseUrl}?id=${id}`);
+  }
 }

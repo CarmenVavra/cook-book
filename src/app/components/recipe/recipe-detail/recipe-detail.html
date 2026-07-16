@@ -18,7 +18,14 @@
     Zurück zur Übersicht
   </a>
 
-  <h1 class="page-title">{{ recipe()!.title }}</h1>
+  <div class="page-header">
+    <h1 class="page-title">{{ recipe()!.title }}</h1>
+    @if (isOwner()) {
+      <button mat-icon-button type="button" (click)="deleteRecipe()" aria-label="Löschen">
+        <mat-icon>delete</mat-icon>
+      </button>
+    }
+  </div>
 
   <div class="meta-row">
     @if (recipe()!.typeName) {
