@@ -61,7 +61,7 @@ export class MyRecipes {
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: (data) => {
-          const dialogRef = this.#dialog.open(RecipeForm, { data });
+          const dialogRef = this.#dialog.open(RecipeForm, { data: { ...data, recipe: null } });
 
           dialogRef.afterClosed()
             .pipe(takeUntilDestroyed(this.#destroyRef))

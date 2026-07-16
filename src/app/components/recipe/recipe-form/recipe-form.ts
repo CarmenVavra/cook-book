@@ -5,12 +5,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { FormField, form, required } from '@angular/forms/signals';
-import { RecipeRequest } from '../models/recipe.model';
+import { RecipeDetail, RecipeRequest } from '../models/recipe.model';
 import { Country } from '../../country/models/country.model';
 import { Type } from '../../type/models/type.model';
 import { Category } from '../../category/models/category.model';
 
 export interface RecipeFormData {
+  recipe: RecipeDetail | null;
   countries: Country[];
   types: Type[];
   categories: Category[];
@@ -33,12 +34,14 @@ export class RecipeForm {
   #dialogRef = inject(MatDialogRef<RecipeForm, RecipeRequest>);
   protected readonly data = inject<RecipeFormData>(MAT_DIALOG_DATA);
 
+  protected readonly isEdit = this.data.recipe !== null;
+
   protected readonly model = signal<RecipeRequest>({
-    title: '',
-    text: '',
-    countryId: null,
-    typeId: null,
-    categoryIds: [],
+    title: this.data.recipe?.title ?? '',
+    text: this.data.recipe?.text ?? '',
+    countryId: this.data.recipe?.countryId ?? null,
+    typeId: this.data.recipe?.typeId ?? null,
+    categoryIds: this.data.recipe?.categories.map((category) => category.id) ?? [],
   });
 
   protected readonly recipeForm = form(this.model, (f) => {

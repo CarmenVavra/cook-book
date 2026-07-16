@@ -12,6 +12,7 @@ export interface IngredientRef {
 export interface RecipeSummary {
   id: number;
   title: string;
+  countryId: number | null;
   countryName: string | null;
   typeId: number | null;
   typeName: string | null;

@@ -35,6 +35,10 @@ export class RecipeService {
     return this.#http.post<RecipeDetail>(this.baseUrl, request);
   }
 
+  update(id: number, request: RecipeRequest): Observable<RecipeDetail> {
+    return this.#http.put<RecipeDetail>(`${this.baseUrl}?id=${id}`, request);
+  }
+
   delete(id: number): Observable<void> {
     return this.#http.delete<void>(`${this.baseUrl}?id=${id}`);
   }

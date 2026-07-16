@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Neues Rezept</h2>
+<h2 mat-dialog-title>{{ isEdit ? 'Rezept bearbeiten' : 'Neues Rezept' }}</h2>
 
 <form (submit)="onSubmit($event)">
   <mat-dialog-content class="form-content">
