@@ -1,0 +1,232 @@
+Online Kochbuch
+===============
+
+- Rezept erfassen/bearbeiten/löschen/anzeigen
+- Rezept als Favorit markieren
+- Rezept nach Kategorie (Fleisch, Reis, Nudeln, Vegetarisch, Vegan, Salat, Hausmannskost, Süßes, ...)
+- Kategorie erfassen/bearbeiten/löschen/anzeigen
+- Rezept nach Land (chinesisch, indisch, )
+- Land erfassen/bearbeiten/löschen/anzeigen
+- Rezept nach Typ (Vorspeise, Hauptspeise, Nachspeise, Beilage, ...)
+- Typ erfassen/bearbeiten/löschen/anzeigen
+- 
+
+
+KATEGORIE - categories
+----------------------
+- Suppen (=> parent_from: child[klare SuppenId, CremesuppenId, kalte SuppenId], child_from: "" )
+	-- klare Suppen (=> parent_from: child[], child_from: "SuppenId")
+	-- Cremesuppen
+	-- kalte Suppen
+- Fleisch
+	-- (weitere Unterteilung) 	-> Huhn
+								-> Rind
+								-> Kalb
+								-> Schwein
+								-> und weitere frei defnierbar
+- Reis
+- Nudeln
+- Hausmannskost
+- und weitere frei defnierbar
+
+--> id, name, hierarchy (parent/child), parentId, childId
+
+Bsp: 
+
+suppen = {
+	id: 1,
+	name: "Suppen",
+	parentFrom: [klareSuppen.id, "CremesuppenId", "kalteSuppenId"],
+	childFrom: 0,
+	parent: true,
+	child: false,
+}
+
+klareSuppen = {
+	id: 1,
+	name: "klare Suppen",
+	parentFrom: [],
+	childFrom: suppen.id,
+	parent: false,
+	child: true,
+}
+
+
+LAND - countries
+----------------
+- chinesisch
+- japanisch
+- indisch
+- und weitere frei definierbar 
+
+--> id, name
+
+
+TYP - types
+-----------
+- Vorspeise
+- Hauptspeise
+- Nachspeise
+- Beilage
+- und weitere frei definierbar
+
+--> id, name
+
+
+REZEPT - receipe
+----------------
+- id
+- name/bezeichnung
+-
+
+
+
+Technologien: 
+
+Auth0 --> Register/Login
+Angular 21 - Signals, SignalForms
+Material
+Spring Boot - 3.5 - Controller, Models, Entities, Repositories, DTOs
+Swagger .. derzeit nur kompatibel mit Spring Boot 3.5.
+Logging?
+Storybook?
+
+
+Claude-Code Plan: 
+# Kochbuch – Fundament: Kategorie-Hierarchie + Land/Typ-Verwaltung
+
+## Kontext
+
+Der Nutzer hat in `brainstorming.txt` die Gesamtvision für das Kochbuch skizziert: Rezepte mit Favoriten, hierarchische Kategorien (z. B. Suppen → klare Suppen/Cremesuppen/kalte Suppen), Länder und Typen (Vorspeise/Hauptspeise/…), umgesetzt mit Angular 21 (Signals, Signal Forms) + Material auf dem Frontend und Spring Boot 3.5 auf dem Backend.
+
+Eine Bestandsaufnahme des Backends ergab: Category/Country/Type haben zwar rudimentäres CRUD, aber die Category-Hierarchie ist nur als tote `parentFrom`/`childFrom`-Array-Felder ohne echte JPA-Beziehung vorhanden (funktioniert nicht), es gibt keine DTOs (rohe Entities werden direkt exponiert), und jeder Service verschluckt alle Fehler zu einem pauschalen 404. Favoriten und die Rezept-Kategorie-Verknüpfung existieren nirgends.
+
+Der Nutzer hat entschieden:
+1. **Favoriten**: später, erstmal nur ein einfaches globales Flag vorsehen (kein Backend-Auth jetzt) – nicht Teil dieser Runde.
+2. **Diese Runde = Fundament**: Kategorie-Hierarchie reparieren + Land- und Typ-Verwaltung sauber machen, jeweils Backend und Frontend. Rezept-CRUD folgt in einer späteren Runde.
+3. Backend-Logging und Storybook werden in dieser Runde bewusst ausgelassen.
+
+Ziel dieser Runde: eine echte, funktionierende Kategorie-Hierarchie, ein konsistenter DTO/Validierungs-Standard für Category/Country/Type, und passende Frontend-Seiten (Liste + Anlegen/Bearbeiten/Löschen) für alle drei – als Grundlage für das spätere Rezept-Formular (das Kategorie/Land/Typ referenziert).
+
+---
+
+## Backend (`C:\Users\carme\Desktop\SPRING_BOOT\cookbook`)
+
+### 1. Gemeinsame Fehlerbehandlung zuerst (Grundlage für alles andere)
+
+- `pom.xml`: `spring-boot-starter-validation` ergänzen (fehlt komplett – ohne das ist `@Valid`/`@NotBlank` wirkungslos).
+- Neues `exceptions/`-Package:
+  - `ResourceNotFoundException` → 404 (nur "nicht gefunden per id")
+  - `BadRequestException` → 400 (ungültige/hängende Referenz, z. B. falsche `parentId`, zirkuläre Hierarchie)
+  - `ConflictException` → 409 (z. B. doppelter `Type.name`, Löschen einer Kategorie mit Kindern)
+  - `ApiError` – einheitliche Response-Form `{ status, message, fieldErrors? }`
+  - `GlobalExceptionHandler` (`@RestControllerAdvice`) – mappt die drei Exceptions, plus `MethodArgumentNotValidException` → 400 mit Feldfehlern, `DataIntegrityViolationException` → 409 als Backstop, `Exception` → 500.
+- Services werfen künftig diese Exceptions statt alles in try/catch zu 404 zu verschlucken.
+
+### 2. Category-Hierarchie reparieren
+
+- `entities/Category.java`: `parentFrom`/`childFrom`/`isParent`/`isChild` ersetzen durch ein echtes, **unidirektionales** `@ManyToOne @JoinColumn(name="parent_id") Category parent` (keine `@OneToMany children`-Collection – bei der kleinen erwarteten Datenmenge unnötige Rekursionsgefahr; Kinder werden per Repository-Query geholt).
+- `CategoryRepository`: `List<Category> findByParentId(Integer parentId)`, `long countByParentId(Integer parentId)`.
+- Neue `dtos/CategoryDTO.java` (Response): `id, name, parentId, parentName, childCount`.
+- Neue `dtos/CategoryRequest.java` (Create/Update-Body): `@NotBlank name`, `parentId` (nullable).
+- `CategoryService`: Mapping auf DTO in einer privaten Methode (kein ModelMapper – der würde bei `parent.parent...` gefährlich rekursiv mappen). Regeln:
+  - `parentId` gesetzt aber nicht auflösbar → `BadRequestException`
+  - `parentId == eigene id` oder Vorfahre schließt einen Zyklus → `BadRequestException`
+  - Löschen mit `countByParentId(id) > 0` → `ConflictException`
+- `CategoryController`: DTO-Signaturen, `@Valid`, `PUT /category?id={id}` (statt `id` im Body – mechanische Anpassung an die bestehende `?id=`-Konvention).
+- **DB-Migration**: `ddl-auto=update` lässt Hibernate beim ersten Start automatisch die neue `parent_id`-Spalte anlegen (nullable) – die beiden bestehenden Zeilen ("Suppen", "Fleisch") werden dabei automatisch zu gültigen Top-Level-Kategorien (`parent_id = NULL`), kein Datenverlust. Danach **einmalig manuell** in MySQL Workbench/CLI ausführen, um die verwaisten alten Spalten zu entfernen:
+  ```sql
+  ALTER TABLE category
+    DROP COLUMN parent_from,
+    DROP COLUMN child_from,
+    DROP COLUMN is_parent,
+    DROP COLUMN is_child;
+  ```
+- `entities/CategoryRecipe.java` bleibt unverändert/unverknüpft – Rezept-Kategorie-Bezug folgt in der Rezept-Runde.
+
+### 3. Country und Type nach demselben "sauberen" Standard
+
+- `dtos/CountryDTO.java` + `CountryRequest.java` (`@NotBlank name`, `@Size(max=3) nameShort`, optional `adjective`).
+- `entities/Country.java`: Feld `name_short` → `nameShort` umbenennen (rein Java-seitig, Hibernates Naming-Strategy mappt weiterhin automatisch auf die bestehende Spalte `name_short` – keine DB-Änderung nötig).
+- `dtos/TypeDTO.java` + `TypeRequest.java` (`@NotBlank name`).
+- `TypeRepository`: `Optional<Type> findByName(String name)` – Service prüft vor dem Speichern und wirft `ConflictException` bei Duplikat (plus `DataIntegrityViolationException`-Handler als Absicherung bei Race Conditions).
+- Controller/Service beider Entities: gleiche Umstellung wie Category (DTOs, `@Valid`, throw statt catch, `PUT ?id=`).
+
+Unverändert in dieser Runde: `Recipe`, `Ingredient`, `Unit`, `CategoryRecipe`, `AppConfig`, `CorsConfig`, `dtos/UnitDTO.java`.
+
+---
+
+## Frontend (`C:\Users\carme\Desktop\SPRING_BOOT\cookbook-app`)
+
+### 4. Category anpassen
+
+- [category.model.ts](src/app/components/category/models/category.model.ts): neue Form passend zum Backend-DTO:
+  ```ts
+  export interface Category { id: number; name: string; parentId: number | null; parentName: string | null; childCount: number; }
+  export interface CategoryRequest { name: string; parentId: number | null; }
+  ```
+- [category-service.ts](src/app/components/category/services/category-service.ts): `.pipe(map((res: any) => res))`-Nichtstun entfernen, sauber typisierte `Observable<Category[]>`/`Observable<Category>`; `update`/`delete` auf `?id=`-Konvention anpassen; bestehendes `LoggerService`-Debug-Logging beibehalten.
+- **Hierarchie-Darstellung**: flache, eingerückte Liste (kein CDK-Tree – bei 2-3 Ebenen und wenigen Knoten unnötiger Aufwand). Reine Hilfsfunktion gruppiert `Category[]` per `parentId` und erzeugt rekursiv `Array<Category & { depth: number }>` (alphabetisch je Ebene sortiert); Template nutzt `[style.paddingLeft.px]="depth * 24"` statt Karten-Grid.
+- Anlegen/Bearbeiten/Löschen ergänzen (siehe Signal-Forms-Muster unten), Löschen mit einfachem `window.confirm()`.
+
+### 5. Signal-Forms-Muster (neu für dieses Projekt, einmal etablieren)
+
+`@angular/forms/signals` ist bereits in `@angular/forms@21.2.11` enthalten (verifiziert). Kein Custom-Adapter nötig:
+- `<input matInput [formField]="form.name" />` – `matInput` ist eine Direktive auf einem nativen `<input>`, direkt kompatibel.
+- `<mat-select [formField]="form.parentId">` – `mat-select` implementiert bereits `ControlValueAccessor`, damit ebenfalls direkt kompatibel (kein Wrapper bauen, nur falls sich das in der Praxis als unzuverlässig erweist).
+
+Muster: ein `MatDialog`-Inhalts-Component pro Entity für Anlegen **und** Bearbeiten (z. B. `components/category/category-form/category-form.ts`), mit `signal<FormModel>` + `form(model, (f) => { required(f.name, ...) })`, `mat-error` liest `form.name().errors()[0]?.message`. Der eigentliche HTTP-Call passiert nach Schließen des Dialogs in der Listen-Komponente. Category zuerst bauen (validiert `mat-select`-Interop), Country/Type danach mechanisch nach demselben Muster (nur Textfelder, kein Parent-Picker).
+
+Hinweis: Falls `MatDialog` beim ersten Einsatz eine Animations-Warnung zeigt, ggf. `provideAnimationsAsync()` in [app.config.ts](src/app/app.config.ts) ergänzen (aktuell ist kein Animations-Provider konfiguriert).
+
+### 6. Neue Country- und Type-Features
+
+Exakt gleiche Ordnerkonvention wie `components/category/`:
+- `components/country/{country.ts,.html,.css,.spec.ts}`, `models/country.model.ts`, `services/{country-service.ts,.spec.ts}`, `country-form/country-form.ts`
+- `components/type/{type.ts,.html,.css,.spec.ts}`, `models/type.model.ts`, `services/{type-service.ts,.spec.ts}`, `type-form/type-form.ts`
+
+Beide sind einfache Liste + Anlegen/Bearbeiten/Löschen ohne Hierarchie – strukturell identisch zu Category minus Einrückungslogik.
+
+### 7. Routing/Navigation
+
+- [app.routes.ts](src/app/app.routes.ts): `{ path: "country", component: Country }`, `{ path: "type", component: Type }` ergänzen.
+- [app.html](src/app/app.html): passende `routerLink`s neben "Start"/"Kategorien" in der Toolbar ergänzen.
+
+---
+
+## Reihenfolge
+
+1. Backend: Validation-Dependency + Exceptions/Handler (gemeinsame Basis).
+2. Backend: Category-Entity umbauen → einmal starten (Hibernate legt `parent_id` an) → manuelles `DROP COLUMN` → Repository-Methoden.
+3. Backend: Category DTOs/Request + Service (Zyklus-Check, Lösch-Sperre) + Controller.
+4. Backend: Country + Type DTOs/Requests/Services/Controller (mechanische Wiederholung des Category-Musters, ohne Hierarchie).
+5. Backend-Smoke-Test (siehe Verifikation) **bevor** das Frontend angefasst wird.
+6. Frontend: Category Model/Service umbauen.
+7. Frontend: `category-form` (Signal Forms inkl. `mat-select`) – zuerst, da riskantester neuer Baustein.
+8. Frontend: `category.ts/html/css` – Einrückungs-Helper, Anlegen/Bearbeiten/Löschen verdrahten.
+9. Frontend: Country-Feature (mechanische Wiederholung).
+10. Frontend: Type-Feature (mechanische Wiederholung).
+11. Frontend: Routen + Toolbar-Navigation.
+12. Vollständiger manueller Verifikations-Durchlauf.
+
+---
+
+## Verifikation
+
+**Backend** (MySQL muss laufen, siehe bekannte Zugangsdaten root/1234):
+- `mvn compile` (schneller Typ-Check), dann `mvn spring-boot:run`.
+- `GET /category/all` → "Suppen"/"Fleisch" jetzt als `CategoryDTO` mit `parentId: null`.
+- `POST /category {"name":"Klare Suppen","parentId":1}` → 201; `GET /category/all` zeigt `childCount: 1` bei Suppen.
+- `POST /category {"name":""}` → 400 mit Feldfehler.
+- `POST /category {"parentId":9999,"name":"x"}` → 400 (hängende Referenz).
+- `DELETE /category?id=1` mit vorhandenem Kind → 409; Kind zuerst löschen, dann Elternkategorie.
+- `POST /type` zweimal mit gleichem Namen → zweiter Call 409.
+- `POST /country {"name":"Italien","nameShort":"ITA","adjective":"italienisch"}` → 201.
+- `mvn test` (Context-Load-Test muss weiterhin grün sein).
+
+**Frontend**:
+- `npm test` (bestehende + neue Country/Type-Specs).
+- `npm run build` (fängt Signal-Forms-/SSR-Typfehler ab).
+- `ng serve`: `/category` – Elternkategorie anlegen, Kindkategorie mit Parent-Auswahl anlegen, korrekte Einrückung prüfen, Kind umbenennen, Löschen der Elternkategorie mit vorhandenem Kind blockieren (Fehler sollte über Interceptor/Logger sichtbar werden), dann Kind und Eltern löschen.
+- `/country` und `/type`: Anlegen/Bearbeiten/Löschen durchspielen.
+- Browser-Konsole und Network-Tab auf unerwartete Fehler bzw. korrekte DTO-Formate prüfen.

@@ -1,0 +1,51 @@
+@if (loading()) {
+  <div class="state-container">
+    <mat-spinner diameter="48" />
+    <p>Rezept wird geladen…</p>
+  </div>
+} @else if (error() || !recipe()) {
+  <div class="state-container">
+    <mat-icon class="state-icon">error_outline</mat-icon>
+    <p>Rezept konnte nicht geladen werden. Bitte versuche es später erneut.</p>
+    <button mat-stroked-button type="button" (click)="reload()">
+      <mat-icon>refresh</mat-icon>
+      Erneut versuchen
+    </button>
+  </div>
+} @else {
+  <a class="back-link" routerLink="/recipes">
+    <mat-icon>arrow_back</mat-icon>
+    Zurück zur Übersicht
+  </a>
+
+  <h1 class="page-title">{{ recipe()!.title }}</h1>
+
+  <div class="meta-row">
+    @if (recipe()!.typeName) {
+      <span class="meta-chip">{{ recipe()!.typeName }}</span>
+    }
+    @if (recipe()!.countryName) {
+      <span class="meta-chip">{{ recipe()!.countryName }}</span>
+    }
+    @for (category of recipe()!.categories; track category.id) {
+      <span class="meta-chip">{{ category.name }}</span>
+    }
+  </div>
+
+  @if (recipe()!.ingredients.length > 0) {
+    <h2 class="section-title">Zutaten</h2>
+    <ul class="ingredient-list">
+      @for (ingredient of recipe()!.ingredients; track ingredient.id) {
+        <li>
+          {{ ingredient.name }}
+          @if (ingredient.unitName) {
+            <span class="unit">({{ ingredient.unitName }})</span>
+          }
+        </li>
+      }
+    </ul>
+  }
+
+  <h2 class="section-title">Zubereitung</h2>
+  <p class="recipe-text">{{ recipe()!.text }}</p>
+}

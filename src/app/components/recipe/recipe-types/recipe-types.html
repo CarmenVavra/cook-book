@@ -1,0 +1,32 @@
+@if (loading()) {
+  <div class="state-container">
+    <mat-spinner diameter="48" />
+    <p>Typen werden geladen…</p>
+  </div>
+} @else if (error()) {
+  <div class="state-container">
+    <mat-icon class="state-icon">error_outline</mat-icon>
+    <p>Typen konnten nicht geladen werden. Bitte versuche es später erneut.</p>
+    <button mat-stroked-button type="button" (click)="reload()">
+      <mat-icon>refresh</mat-icon>
+      Erneut versuchen
+    </button>
+  </div>
+} @else {
+  <h1 class="page-title">Rezepte entdecken</h1>
+  @if (types().length === 0) {
+    <div class="state-container">
+      <mat-icon class="state-icon">inbox</mat-icon>
+      <p>Noch keine Typen vorhanden.</p>
+    </div>
+  } @else {
+    <div class="browse-grid">
+      @for (type of types(); track type.id) {
+        <a class="browse-card" [routerLink]="['/recipes/type', type.id]">
+          <mat-icon class="browse-icon">label</mat-icon>
+          <span class="browse-name">{{ type.name }}</span>
+        </a>
+      }
+    </div>
+  }
+}

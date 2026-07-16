@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Kategorie bearbeiten' : 'Kategorie anlegen' }}</h2>
+
+<form (submit)="onSubmit($event)">
+  <mat-dialog-content class="form-content">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput [formField]="categoryForm.name" />
+      @if (categoryForm.name().invalid() && categoryForm.name().touched()) {
+        <mat-error>{{ categoryForm.name().errors()[0]?.message }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Übergeordnete Kategorie</mat-label>
+      <mat-select [formField]="categoryForm.parentId">
+        <mat-option [value]="null">(keine – oberste Ebene)</mat-option>
+        @for (option of parentOptions; track option.id) {
+          <mat-option [value]="option.id">{{ option.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="cancel()">Abbrechen</button>
+    <button mat-raised-button color="primary" type="submit">Speichern</button>
+  </mat-dialog-actions>
+</form>

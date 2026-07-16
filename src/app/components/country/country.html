@@ -1,0 +1,52 @@
+@if (loading()) {
+  <div class="state-container">
+    <mat-spinner diameter="48" />
+    <p>Länder werden geladen…</p>
+  </div>
+} @else if (error()) {
+  <div class="state-container">
+    <mat-icon class="state-icon">error_outline</mat-icon>
+    <p>Länder konnten nicht geladen werden. Bitte versuche es später erneut.</p>
+    <button mat-stroked-button type="button" (click)="reload()">
+      <mat-icon>refresh</mat-icon>
+      Erneut versuchen
+    </button>
+  </div>
+} @else {
+  <div class="page-header">
+    <h1 class="page-title">Länder</h1>
+    <button mat-raised-button color="primary" type="button" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon>
+      Neues Land
+    </button>
+  </div>
+
+  @if (countries().length === 0) {
+    <div class="state-container">
+      <mat-icon class="state-icon">inbox</mat-icon>
+      <p>Noch keine Länder vorhanden.</p>
+    </div>
+  } @else {
+    <mat-card class="entity-list">
+      @for (country of countries(); track country.id) {
+        <div class="entity-row">
+          <mat-icon class="row-icon">public</mat-icon>
+          <span class="row-name">{{ country.name }}</span>
+          @if (country.nameShort) {
+            <span class="row-badge">{{ country.nameShort }}</span>
+          }
+          @if (auth && (auth.isAuthenticated$ | async)) {
+            <span class="row-actions">
+              <button mat-icon-button type="button" (click)="openEditDialog(country)" aria-label="Bearbeiten">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button type="button" (click)="deleteCountry(country)" aria-label="Löschen">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </span>
+          }
+        </div>
+      }
+    </mat-card>
+  }
+}

@@ -1,0 +1,71 @@
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 16px;
+  color: var(--mat-sys-primary);
+  text-decoration: none;
+  font: var(--mat-sys-label-large);
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.page-title {
+  margin: 0 0 24px;
+  font: var(--mat-sys-headline-medium);
+}
+
+.browse-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.browse-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 16px;
+  text-align: center;
+  border-radius: 16px;
+  background: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface);
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.browse-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--mat-sys-level3);
+}
+
+.browse-icon {
+  width: 40px;
+  height: 40px;
+  font-size: 40px;
+  color: var(--mat-sys-primary);
+}
+
+.browse-name {
+  font: var(--mat-sys-title-medium);
+}
+
+.state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 64px 16px;
+  color: var(--mat-sys-on-surface-variant);
+  text-align: center;
+}
+
+.state-icon {
+  width: 48px;
+  height: 48px;
+  font-size: 48px;
+}

@@ -1,0 +1,62 @@
+@if (loading()) {
+  <div class="state-container">
+    <mat-spinner diameter="48" />
+    <p>Kategorien werden geladen…</p>
+  </div>
+} @else if (error()) {
+  <div class="state-container">
+    <mat-icon class="state-icon">error_outline</mat-icon>
+    <p>Kategorien konnten nicht geladen werden. Bitte versuche es später erneut.</p>
+    <button mat-stroked-button type="button" (click)="reload()">
+      <mat-icon>refresh</mat-icon>
+      Erneut versuchen
+    </button>
+  </div>
+} @else {
+  <div class="page-header">
+    <h1 class="page-title">Kategorien</h1>
+    <button mat-raised-button color="primary" type="button" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon>
+      Neue Kategorie
+    </button>
+  </div>
+
+  @if (rows().length === 0) {
+    <div class="state-container">
+      <mat-icon class="state-icon">inbox</mat-icon>
+      <p>Noch keine Kategorien vorhanden.</p>
+    </div>
+  } @else {
+    <mat-card class="category-list">
+      @for (row of rows(); track row.id) {
+        <div
+          class="category-row"
+          [class.clickable]="row.childCount > 0"
+          [style.paddingLeft.px]="row.depth * 24"
+          (click)="toggleExpand(row)"
+        >
+          @if (row.childCount > 0) {
+            <mat-icon class="row-chevron">{{ row.expanded ? 'expand_more' : 'chevron_right' }}</mat-icon>
+          } @else {
+            <span class="row-chevron-spacer"></span>
+          }
+          <mat-icon class="row-icon">restaurant_menu</mat-icon>
+          <span class="row-name">{{ row.name }}</span>
+          @if (row.childCount > 0) {
+            <span class="row-badge">{{ row.childCount }} Unterkategorie(n)</span>
+          }
+          @if (auth && (auth.isAuthenticated$ | async)) {
+            <span class="row-actions">
+              <button mat-icon-button type="button" (click)="$event.stopPropagation(); openEditDialog(row)" aria-label="Bearbeiten">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button type="button" (click)="$event.stopPropagation(); deleteCategory(row)" aria-label="Löschen">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </span>
+          }
+        </div>
+      }
+    </mat-card>
+  }
+}

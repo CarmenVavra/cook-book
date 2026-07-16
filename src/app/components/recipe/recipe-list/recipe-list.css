@@ -1,0 +1,82 @@
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 16px;
+  color: var(--mat-sys-primary);
+  text-decoration: none;
+  font: var(--mat-sys-label-large);
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.page-title {
+  margin: 0 0 24px;
+  font: var(--mat-sys-headline-medium);
+}
+
+.recipe-list {
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--mat-sys-surface-container);
+}
+
+.recipe-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  color: var(--mat-sys-on-surface);
+  text-decoration: none;
+}
+
+.recipe-row:last-child {
+  border-bottom: none;
+}
+
+.recipe-row:hover {
+  background: var(--mat-sys-surface-container-high);
+}
+
+.row-icon {
+  color: var(--mat-sys-primary);
+}
+
+.row-name {
+  flex: 1 1 auto;
+  font: var(--mat-sys-body-large);
+}
+
+.row-badge {
+  font: var(--mat-sys-label-small);
+  color: var(--mat-sys-on-surface-variant);
+  background: var(--mat-sys-surface-container-high);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.row-chevron {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 64px 16px;
+  color: var(--mat-sys-on-surface-variant);
+  text-align: center;
+}
+
+.state-icon {
+  width: 48px;
+  height: 48px;
+  font-size: 48px;
+}
