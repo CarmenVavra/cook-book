@@ -155,6 +155,7 @@ public class RecipeService {
         return new RecipeSummaryDTO(
                 recipe.getId(),
                 recipe.getTitle(),
+                country != null ? country.getId() : null,
                 country != null ? country.getName() : null,
                 type != null ? type.getId() : null,
                 type != null ? type.getName() : null,
@@ -178,6 +179,7 @@ public class RecipeService {
                 summary.getId(),
                 summary.getTitle(),
                 recipe.getText(),
+                summary.getCountryId(),
                 summary.getCountryName(),
                 summary.getTypeId(),
                 summary.getTypeName(),

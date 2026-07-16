@@ -6,6 +6,7 @@ public class RecipeDetailDTO {
     private Integer id;
     private String title;
     private String text;
+    private Integer countryId;
     private String countryName;
     private Integer typeId;
     private String typeName;
@@ -16,12 +17,13 @@ public class RecipeDetailDTO {
     public RecipeDetailDTO() {
     }
 
-    public RecipeDetailDTO(Integer id, String title, String text, String countryName, Integer typeId,
-                            String typeName, List<CategoryRefDTO> categories, List<IngredientRefDTO> ingredients,
-                            String ownerSub) {
+    public RecipeDetailDTO(Integer id, String title, String text, Integer countryId, String countryName,
+                            Integer typeId, String typeName, List<CategoryRefDTO> categories,
+                            List<IngredientRefDTO> ingredients, String ownerSub) {
         this.id = id;
         this.title = title;
         this.text = text;
+        this.countryId = countryId;
         this.countryName = countryName;
         this.typeId = typeId;
         this.typeName = typeName;
@@ -52,6 +54,14 @@ public class RecipeDetailDTO {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Integer getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(Integer countryId) {
+        this.countryId = countryId;
     }
 
     public String getCountryName() {

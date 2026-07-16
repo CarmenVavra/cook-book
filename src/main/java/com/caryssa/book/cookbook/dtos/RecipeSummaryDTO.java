@@ -5,6 +5,7 @@ import java.util.List;
 public class RecipeSummaryDTO {
     private Integer id;
     private String title;
+    private Integer countryId;
     private String countryName;
     private Integer typeId;
     private String typeName;
@@ -14,10 +15,11 @@ public class RecipeSummaryDTO {
     public RecipeSummaryDTO() {
     }
 
-    public RecipeSummaryDTO(Integer id, String title, String countryName, Integer typeId, String typeName,
-                             List<CategoryRefDTO> categories, String ownerSub) {
+    public RecipeSummaryDTO(Integer id, String title, Integer countryId, String countryName, Integer typeId,
+                             String typeName, List<CategoryRefDTO> categories, String ownerSub) {
         this.id = id;
         this.title = title;
+        this.countryId = countryId;
         this.countryName = countryName;
         this.typeId = typeId;
         this.typeName = typeName;
@@ -39,6 +41,14 @@ public class RecipeSummaryDTO {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Integer getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(Integer countryId) {
+        this.countryId = countryId;
     }
 
     public String getCountryName() {
