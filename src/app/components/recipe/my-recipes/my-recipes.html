@@ -18,7 +18,13 @@
     <p>Bitte melde dich an, um deine Rezepte zu sehen.</p>
   </div>
 } @else {
-  <h1 class="page-title">Meine Rezepte</h1>
+  <div class="page-header">
+    <h1 class="page-title">Meine Rezepte</h1>
+    <button mat-raised-button color="primary" type="button" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon>
+      Neues Rezept
+    </button>
+  </div>
 
   @if (myRecipes().length === 0) {
     <div class="state-container">

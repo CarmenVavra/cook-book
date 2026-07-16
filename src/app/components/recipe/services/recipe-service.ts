@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { RecipeDetail, RecipeSummary } from '../models/recipe.model';
+import { RecipeDetail, RecipeRequest, RecipeSummary } from '../models/recipe.model';
 import { LoggerService } from '../../../core/logging/logger-service';
 
 @Injectable({
@@ -29,6 +29,10 @@ export class RecipeService {
 
   getById(id: number): Observable<RecipeDetail> {
     return this.#http.get<RecipeDetail>(`${this.baseUrl}?id=${id}`);
+  }
+
+  create(request: RecipeRequest): Observable<RecipeDetail> {
+    return this.#http.post<RecipeDetail>(this.baseUrl, request);
   }
 
   delete(id: number): Observable<void> {

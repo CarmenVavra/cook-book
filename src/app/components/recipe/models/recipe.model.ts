@@ -23,3 +23,11 @@ export interface RecipeDetail extends RecipeSummary {
   text: string | null;
   ingredients: IngredientRef[];
 }
+
+export interface RecipeRequest {
+  title: string;
+  text: string;
+  countryId: number | null;
+  typeId: number | null;
+  categoryIds: number[];
+}
