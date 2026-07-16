@@ -11,6 +11,7 @@ import com.caryssa.book.cookbook.entities.Ingredient;
 import com.caryssa.book.cookbook.entities.Recipe;
 import com.caryssa.book.cookbook.entities.Type;
 import com.caryssa.book.cookbook.exceptions.BadRequestException;
+import com.caryssa.book.cookbook.exceptions.ForbiddenException;
 import com.caryssa.book.cookbook.exceptions.ResourceNotFoundException;
 import com.caryssa.book.cookbook.repositories.CategoryRepository;
 import com.caryssa.book.cookbook.repositories.CountryRepository;
@@ -66,21 +67,30 @@ public class RecipeService {
         return toDetailDto(findByIdOrThrow(id));
     }
 
-    public RecipeDetailDTO createRecipe(RecipeRequest request) {
+    public RecipeDetailDTO createRecipe(RecipeRequest request, String ownerSub) {
         Recipe recipe = new Recipe();
+        recipe.setOwnerSub(ownerSub);
         applyRequest(recipe, request);
         return toDetailDto(recipeRepository.save(recipe));
     }
 
-    public RecipeDetailDTO updateRecipe(Integer id, RecipeRequest request) {
+    public RecipeDetailDTO updateRecipe(Integer id, RecipeRequest request, String ownerSub) {
         Recipe recipe = findByIdOrThrow(id);
+        requireOwner(recipe, ownerSub);
         applyRequest(recipe, request);
         return toDetailDto(recipeRepository.save(recipe));
     }
 
-    public void deleteRecipe(Integer id) {
-        findByIdOrThrow(id);
+    public void deleteRecipe(Integer id, String ownerSub) {
+        Recipe recipe = findByIdOrThrow(id);
+        requireOwner(recipe, ownerSub);
         recipeRepository.deleteById(id);
+    }
+
+    private void requireOwner(Recipe recipe, String ownerSub) {
+        if (!ownerSub.equals(recipe.getOwnerSub())) {
+            throw new ForbiddenException("Du kannst nur deine eigenen Rezepte bearbeiten oder löschen.");
+        }
     }
 
     private Recipe findByIdOrThrow(Integer id) {
@@ -148,7 +158,8 @@ public class RecipeService {
                 country != null ? country.getName() : null,
                 type != null ? type.getId() : null,
                 type != null ? type.getName() : null,
-                categoryRefs
+                categoryRefs,
+                recipe.getOwnerSub()
         );
     }
 
@@ -171,7 +182,8 @@ public class RecipeService {
                 summary.getTypeId(),
                 summary.getTypeName(),
                 summary.getCategories(),
-                ingredientRefs
+                ingredientRefs,
+                summary.getOwnerSub()
         );
     }
 }

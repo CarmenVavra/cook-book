@@ -9,18 +9,20 @@ public class RecipeSummaryDTO {
     private Integer typeId;
     private String typeName;
     private List<CategoryRefDTO> categories;
+    private String ownerSub;
 
     public RecipeSummaryDTO() {
     }
 
     public RecipeSummaryDTO(Integer id, String title, String countryName, Integer typeId, String typeName,
-                             List<CategoryRefDTO> categories) {
+                             List<CategoryRefDTO> categories, String ownerSub) {
         this.id = id;
         this.title = title;
         this.countryName = countryName;
         this.typeId = typeId;
         this.typeName = typeName;
         this.categories = categories;
+        this.ownerSub = ownerSub;
     }
 
     public Integer getId() {
@@ -69,5 +71,13 @@ public class RecipeSummaryDTO {
 
     public void setCategories(List<CategoryRefDTO> categories) {
         this.categories = categories;
+    }
+
+    public String getOwnerSub() {
+        return ownerSub;
+    }
+
+    public void setOwnerSub(String ownerSub) {
+        this.ownerSub = ownerSub;
     }
 }

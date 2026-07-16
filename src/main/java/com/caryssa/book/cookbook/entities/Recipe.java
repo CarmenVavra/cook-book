@@ -11,6 +11,7 @@ public class Recipe {
     private int id;
     private String title;
     private String text;
+    private String ownerSub;
     @ManyToOne
     private Country country;
     @ManyToOne
@@ -47,6 +48,14 @@ public class Recipe {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getOwnerSub() {
+        return ownerSub;
+    }
+
+    public void setOwnerSub(String ownerSub) {
+        this.ownerSub = ownerSub;
     }
 
     public Country getCountry() {

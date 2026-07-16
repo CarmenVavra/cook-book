@@ -11,12 +11,14 @@ public class RecipeDetailDTO {
     private String typeName;
     private List<CategoryRefDTO> categories;
     private List<IngredientRefDTO> ingredients;
+    private String ownerSub;
 
     public RecipeDetailDTO() {
     }
 
     public RecipeDetailDTO(Integer id, String title, String text, String countryName, Integer typeId,
-                            String typeName, List<CategoryRefDTO> categories, List<IngredientRefDTO> ingredients) {
+                            String typeName, List<CategoryRefDTO> categories, List<IngredientRefDTO> ingredients,
+                            String ownerSub) {
         this.id = id;
         this.title = title;
         this.text = text;
@@ -25,6 +27,7 @@ public class RecipeDetailDTO {
         this.typeName = typeName;
         this.categories = categories;
         this.ingredients = ingredients;
+        this.ownerSub = ownerSub;
     }
 
     public Integer getId() {
@@ -89,5 +92,13 @@ public class RecipeDetailDTO {
 
     public void setIngredients(List<IngredientRefDTO> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public String getOwnerSub() {
+        return ownerSub;
+    }
+
+    public void setOwnerSub(String ownerSub) {
+        this.ownerSub = ownerSub;
     }
 }
