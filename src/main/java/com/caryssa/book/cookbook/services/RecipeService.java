@@ -12,6 +12,7 @@ import com.caryssa.book.cookbook.entities.Ingredient;
 import com.caryssa.book.cookbook.entities.Recipe;
 import com.caryssa.book.cookbook.entities.RecipeIngredient;
 import com.caryssa.book.cookbook.entities.Type;
+import com.caryssa.book.cookbook.entities.Unit;
 import com.caryssa.book.cookbook.exceptions.BadRequestException;
 import com.caryssa.book.cookbook.exceptions.ForbiddenException;
 import com.caryssa.book.cookbook.exceptions.ResourceNotFoundException;
@@ -20,6 +21,7 @@ import com.caryssa.book.cookbook.repositories.CountryRepository;
 import com.caryssa.book.cookbook.repositories.IngredientRepository;
 import com.caryssa.book.cookbook.repositories.RecipeRepository;
 import com.caryssa.book.cookbook.repositories.TypeRepository;
+import com.caryssa.book.cookbook.repositories.UnitRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,15 +37,17 @@ public class RecipeService {
     private final TypeRepository typeRepository;
     private final CategoryRepository categoryRepository;
     private final IngredientRepository ingredientRepository;
+    private final UnitRepository unitRepository;
 
     public RecipeService(RecipeRepository recipeRepository, CountryRepository countryRepository,
                           TypeRepository typeRepository, CategoryRepository categoryRepository,
-                          IngredientRepository ingredientRepository) {
+                          IngredientRepository ingredientRepository, UnitRepository unitRepository) {
         this.recipeRepository = recipeRepository;
         this.countryRepository = countryRepository;
         this.typeRepository = typeRepository;
         this.categoryRepository = categoryRepository;
         this.ingredientRepository = ingredientRepository;
+        this.unitRepository = unitRepository;
     }
 
     public List<RecipeSummaryDTO> getAllRecipes(Integer typeId, Integer categoryId) {
@@ -146,6 +150,14 @@ public class RecipeService {
                 RecipeIngredient link = new RecipeIngredient();
                 link.setRecipe(recipe);
                 link.setIngredient(ingredient);
+                if (ingredientRequest.getUnitId() != null) {
+                    Unit unit = unitRepository.findById(ingredientRequest.getUnitId())
+                            .orElseThrow(() -> new BadRequestException(
+                                    "unitId " + ingredientRequest.getUnitId() + " verweist auf keine existierende Einheit."));
+                    link.setUnit(unit);
+                } else {
+                    link.setUnit(null);
+                }
                 link.setAmount(ingredientRequest.getAmount());
                 recipeIngredients.add(link);
             }
@@ -182,8 +194,15 @@ public class RecipeService {
         if (recipe.getRecipeIngredients() != null) {
             for (RecipeIngredient link : recipe.getRecipeIngredients()) {
                 Ingredient ingredient = link.getIngredient();
-                String unitName = ingredient.getUnit() != null ? ingredient.getUnit().getName() : null;
-                ingredientRefs.add(new IngredientRefDTO(ingredient.getId(), ingredient.getName(), unitName, link.getAmount()));
+                Unit unit = link.getUnit();
+                ingredientRefs.add(new IngredientRefDTO(
+                        ingredient.getId(),
+                        ingredient.getName(),
+                        unit != null ? unit.getId() : null,
+                        unit != null ? unit.getName() : null,
+                        unit != null ? unit.getNameShort() : null,
+                        link.getAmount()
+                ));
             }
         }
 

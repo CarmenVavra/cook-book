@@ -6,6 +6,8 @@ public class RecipeIngredientRequest {
     @NotNull(message = "ingredientId darf nicht leer sein")
     private Integer ingredientId;
 
+    private Integer unitId;
+
     private Double amount;
 
     public Integer getIngredientId() {
@@ -14,6 +16,14 @@ public class RecipeIngredientRequest {
 
     public void setIngredientId(Integer ingredientId) {
         this.ingredientId = ingredientId;
+    }
+
+    public Integer getUnitId() {
+        return unitId;
+    }
+
+    public void setUnitId(Integer unitId) {
+        this.unitId = unitId;
     }
 
     public Double getAmount() {

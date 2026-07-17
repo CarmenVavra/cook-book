@@ -16,6 +16,10 @@ public class RecipeIngredient {
     @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;
 
+    @ManyToOne
+    @JoinColumn(name = "unit_id")
+    private Unit unit;
+
     private Double amount;
 
     public int getId() {
@@ -40,6 +44,14 @@ public class RecipeIngredient {
 
     public void setIngredient(Ingredient ingredient) {
         this.ingredient = ingredient;
+    }
+
+    public Unit getUnit() {
+        return unit;
+    }
+
+    public void setUnit(Unit unit) {
+        this.unit = unit;
     }
 
     public Double getAmount() {
