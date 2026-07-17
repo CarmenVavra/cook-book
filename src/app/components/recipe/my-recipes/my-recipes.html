@@ -5,23 +5,23 @@
   </div>
 } @else if (error()) {
   <div class="state-container">
-    <mat-icon class="state-icon">error_outline</mat-icon>
+    <mat-icon class="state-icon" fontSet="fa-solid" fontIcon="fa-circle-exclamation"></mat-icon>
     <p>Rezepte konnten nicht geladen werden. Bitte versuche es später erneut.</p>
     <button mat-stroked-button type="button" (click)="reload()">
-      <mat-icon>refresh</mat-icon>
+      <mat-icon fontSet="fa-solid" fontIcon="fa-arrow-rotate-right"></mat-icon>
       Erneut versuchen
     </button>
   </div>
 } @else if (!(auth && (auth.isAuthenticated$ | async))) {
   <div class="state-container">
-    <mat-icon class="state-icon">lock_outline</mat-icon>
+    <mat-icon class="state-icon" fontSet="fa-solid" fontIcon="fa-lock"></mat-icon>
     <p>Bitte melde dich an, um deine Rezepte zu sehen.</p>
   </div>
 } @else {
   <div class="page-header">
     <h1 class="page-title">Meine Rezepte</h1>
     <button mat-raised-button color="primary" type="button" (click)="openCreateDialog()">
-      <mat-icon>add</mat-icon>
+      <mat-icon fontSet="fa-solid" fontIcon="fa-plus"></mat-icon>
       Neues Rezept
     </button>
   </div>
@@ -59,7 +59,7 @@
 
     @if (hasActiveFilter()) {
       <button mat-button type="button" (click)="resetFilters()">
-        <mat-icon>close</mat-icon>
+        <mat-icon fontSet="fa-solid" fontIcon="fa-xmark"></mat-icon>
         Filter zurücksetzen
       </button>
     }
@@ -67,7 +67,7 @@
 
   @if (myRecipes().length === 0) {
     <div class="state-container">
-      <mat-icon class="state-icon">inbox</mat-icon>
+      <mat-icon class="state-icon" fontSet="fa-solid" fontIcon="fa-inbox"></mat-icon>
       @if (hasActiveFilter()) {
         <p>Keine Rezepte für diese Filterauswahl.</p>
       } @else {
@@ -78,12 +78,12 @@
     <div class="recipe-list">
       @for (recipe of myRecipes(); track recipe.id) {
         <a class="recipe-row" [routerLink]="['/recipes', recipe.id]">
-          <mat-icon class="row-icon">menu_book</mat-icon>
+          <mat-icon class="row-icon" fontSet="fa-solid" fontIcon="fa-book-open"></mat-icon>
           <span class="row-name">{{ recipe.title }}</span>
           @if (recipe.countryName) {
             <span class="row-badge">{{ recipe.countryName }}</span>
           }
-          <mat-icon class="row-chevron">chevron_right</mat-icon>
+          <mat-icon class="row-chevron" fontSet="fa-solid" fontIcon="fa-chevron-right"></mat-icon>
         </a>
       }
     </div>

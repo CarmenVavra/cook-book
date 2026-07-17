@@ -3,6 +3,38 @@
   font: var(--mat-sys-headline-medium);
 }
 
+.browse-banner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  min-height: 160px;
+  padding: 24px;
+  margin-bottom: 24px;
+  border-radius: 20px;
+  overflow: hidden;
+  background-image: linear-gradient(rgba(20, 10, 0, 0.55), rgba(20, 10, 0, 0.55)),
+    url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/DFC_2101_Vivid_purple_round_eggplants_piled_with_fresh_green_beans_and_cucumbers_at_a_market_stall.jpg/1920px-DFC_2101_Vivid_purple_round_eggplants_piled_with_fresh_green_beans_and_cucumbers_at_a_market_stall.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.browse-banner .page-title {
+  margin: 0;
+  color: white;
+}
+
+.banner-photo-credit {
+  margin: 4px 0 0;
+  color: rgba(255, 255, 255, 0.7);
+  font: var(--mat-sys-label-small);
+}
+
+.banner-photo-credit a {
+  color: inherit;
+}
+
 .browse-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

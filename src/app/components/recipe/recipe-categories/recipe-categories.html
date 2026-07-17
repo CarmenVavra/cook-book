@@ -5,29 +5,29 @@
   </div>
 } @else if (error()) {
   <div class="state-container">
-    <mat-icon class="state-icon">error_outline</mat-icon>
+    <mat-icon class="state-icon" fontSet="fa-solid" fontIcon="fa-circle-exclamation"></mat-icon>
     <p>Kategorien konnten nicht geladen werden. Bitte versuche es später erneut.</p>
     <button mat-stroked-button type="button" (click)="reload()">
-      <mat-icon>refresh</mat-icon>
+      <mat-icon fontSet="fa-solid" fontIcon="fa-arrow-rotate-right"></mat-icon>
       Erneut versuchen
     </button>
   </div>
 } @else {
   <a class="back-link" routerLink="/recipes">
-    <mat-icon>arrow_back</mat-icon>
+    <mat-icon fontSet="fa-solid" fontIcon="fa-arrow-left"></mat-icon>
     Zurück zu den Typen
   </a>
   <h1 class="page-title">{{ typeName() || 'Kategorien' }}</h1>
   @if (categories().length === 0) {
     <div class="state-container">
-      <mat-icon class="state-icon">inbox</mat-icon>
+      <mat-icon class="state-icon" fontSet="fa-solid" fontIcon="fa-inbox"></mat-icon>
       <p>Noch keine Rezepte für diesen Typ vorhanden.</p>
     </div>
   } @else {
     <div class="browse-grid">
       @for (category of categories(); track category.id) {
         <a class="browse-card" [routerLink]="['/recipes/type', typeId(), 'category', category.id]">
-          <mat-icon class="browse-icon">restaurant_menu</mat-icon>
+          <mat-icon class="browse-icon" fontSet="fa-solid" fontIcon="fa-tags"></mat-icon>
           <span class="browse-name">{{ category.name }}</span>
         </a>
       }

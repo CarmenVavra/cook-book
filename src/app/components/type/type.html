@@ -5,10 +5,10 @@
   </div>
 } @else if (error()) {
   <div class="state-container">
-    <mat-icon class="state-icon">error_outline</mat-icon>
+    <mat-icon class="state-icon" fontSet="fa-solid" fontIcon="fa-circle-exclamation"></mat-icon>
     <p>Typen konnten nicht geladen werden. Bitte versuche es später erneut.</p>
     <button mat-stroked-button type="button" (click)="reload()">
-      <mat-icon>refresh</mat-icon>
+      <mat-icon fontSet="fa-solid" fontIcon="fa-arrow-rotate-right"></mat-icon>
       Erneut versuchen
     </button>
   </div>
@@ -17,7 +17,7 @@
     <h1 class="page-title">Typen</h1>
     @if (auth && (auth.isAuthenticated$ | async)) {
       <button mat-raised-button color="primary" type="button" (click)="openCreateDialog()">
-        <mat-icon>add</mat-icon>
+        <mat-icon fontSet="fa-solid" fontIcon="fa-plus"></mat-icon>
         Neuer Typ
       </button>
     }
@@ -25,22 +25,22 @@
 
   @if (types().length === 0) {
     <div class="state-container">
-      <mat-icon class="state-icon">inbox</mat-icon>
+      <mat-icon class="state-icon" fontSet="fa-solid" fontIcon="fa-inbox"></mat-icon>
       <p>Noch keine Typen vorhanden.</p>
     </div>
   } @else {
     <mat-card class="entity-list">
       @for (type of types(); track type.id) {
         <div class="entity-row">
-          <mat-icon class="row-icon">label</mat-icon>
+          <mat-icon class="row-icon" fontSet="fa-solid" fontIcon="fa-tag"></mat-icon>
           <span class="row-name">{{ type.name }}</span>
           @if (auth && (auth.isAuthenticated$ | async)) {
             <span class="row-actions">
               <button mat-icon-button type="button" (click)="openEditDialog(type)" aria-label="Bearbeiten">
-                <mat-icon>edit</mat-icon>
+                <mat-icon fontSet="fa-solid" fontIcon="fa-pen"></mat-icon>
               </button>
               <button mat-icon-button type="button" (click)="deleteType(type)" aria-label="Löschen">
-                <mat-icon>delete</mat-icon>
+                <mat-icon fontSet="fa-solid" fontIcon="fa-trash"></mat-icon>
               </button>
             </span>
           }

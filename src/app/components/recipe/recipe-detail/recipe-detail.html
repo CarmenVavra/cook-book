@@ -5,28 +5,28 @@
   </div>
 } @else if (error() || !recipe()) {
   <div class="state-container">
-    <mat-icon class="state-icon">error_outline</mat-icon>
+    <mat-icon class="state-icon" fontSet="fa-solid" fontIcon="fa-circle-exclamation"></mat-icon>
     <p>Rezept konnte nicht geladen werden. Bitte versuche es später erneut.</p>
     <button mat-stroked-button type="button" (click)="reload()">
-      <mat-icon>refresh</mat-icon>
+      <mat-icon fontSet="fa-solid" fontIcon="fa-arrow-rotate-right"></mat-icon>
       Erneut versuchen
     </button>
   </div>
 } @else {
-  <a class="back-link" routerLink="/recipes">
-    <mat-icon>arrow_back</mat-icon>
+  <button class="back-link" type="button" (click)="goBack()">
+    <mat-icon fontSet="fa-solid" fontIcon="fa-arrow-left"></mat-icon>
     Zurück zur Übersicht
-  </a>
+  </button>
 
   <div class="page-header">
     <h1 class="page-title">{{ recipe()!.title }}</h1>
     @if (isOwner()) {
       <span class="header-actions">
         <button mat-icon-button type="button" (click)="openEditDialog()" aria-label="Bearbeiten">
-          <mat-icon>edit</mat-icon>
+          <mat-icon fontSet="fa-solid" fontIcon="fa-pen"></mat-icon>
         </button>
         <button mat-icon-button type="button" (click)="deleteRecipe()" aria-label="Löschen">
-          <mat-icon>delete</mat-icon>
+          <mat-icon fontSet="fa-solid" fontIcon="fa-trash"></mat-icon>
         </button>
       </span>
     }

@@ -5,29 +5,29 @@
   </div>
 } @else if (error()) {
   <div class="state-container">
-    <mat-icon class="state-icon">error_outline</mat-icon>
+    <mat-icon class="state-icon" fontSet="fa-solid" fontIcon="fa-circle-exclamation"></mat-icon>
     <p>Rezepte konnten nicht geladen werden. Bitte versuche es später erneut.</p>
     <button mat-stroked-button type="button" (click)="reload()">
-      <mat-icon>refresh</mat-icon>
+      <mat-icon fontSet="fa-solid" fontIcon="fa-arrow-rotate-right"></mat-icon>
       Erneut versuchen
     </button>
   </div>
 } @else {
   <a class="back-link" [routerLink]="['/recipes/type', typeId()]">
-    <mat-icon>arrow_back</mat-icon>
+    <mat-icon fontSet="fa-solid" fontIcon="fa-arrow-left"></mat-icon>
     Zurück zu den Kategorien
   </a>
   <h1 class="page-title">{{ categoryName() || 'Rezepte' }}</h1>
   @if (recipes().length === 0) {
     <div class="state-container">
-      <mat-icon class="state-icon">inbox</mat-icon>
+      <mat-icon class="state-icon" fontSet="fa-solid" fontIcon="fa-inbox"></mat-icon>
       <p>Noch keine Rezepte in dieser Kategorie vorhanden.</p>
     </div>
   } @else {
     <div class="recipe-list">
       @for (recipe of recipes(); track recipe.id) {
         <a class="recipe-row" [routerLink]="['/recipes', recipe.id]">
-          <mat-icon class="row-icon">menu_book</mat-icon>
+          <mat-icon class="row-icon" fontSet="fa-solid" fontIcon="fa-book-open"></mat-icon>
           <span class="row-name">{{ recipe.title }}</span>
           @if (recipe.countryName) {
             <span class="row-badge">{{ recipe.countryName }}</span>
@@ -35,14 +35,14 @@
           @if (isOwner(recipe)) {
             <span class="row-actions">
               <button mat-icon-button type="button" (click)="$event.preventDefault(); $event.stopPropagation(); openEditDialog(recipe)" aria-label="Bearbeiten">
-                <mat-icon>edit</mat-icon>
+                <mat-icon fontSet="fa-solid" fontIcon="fa-pen"></mat-icon>
               </button>
               <button mat-icon-button type="button" (click)="$event.preventDefault(); $event.stopPropagation(); deleteRecipe(recipe)" aria-label="Löschen">
-                <mat-icon>delete</mat-icon>
+                <mat-icon fontSet="fa-solid" fontIcon="fa-trash"></mat-icon>
               </button>
             </span>
           }
-          <mat-icon class="row-chevron">chevron_right</mat-icon>
+          <mat-icon class="row-chevron" fontSet="fa-solid" fontIcon="fa-chevron-right"></mat-icon>
         </a>
       }
     </div>

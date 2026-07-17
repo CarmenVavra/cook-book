@@ -5,25 +5,32 @@
   </div>
 } @else if (error()) {
   <div class="state-container">
-    <mat-icon class="state-icon">error_outline</mat-icon>
+    <mat-icon class="state-icon" fontSet="fa-solid" fontIcon="fa-circle-exclamation"></mat-icon>
     <p>Typen konnten nicht geladen werden. Bitte versuche es später erneut.</p>
     <button mat-stroked-button type="button" (click)="reload()">
-      <mat-icon>refresh</mat-icon>
+      <mat-icon fontSet="fa-solid" fontIcon="fa-arrow-rotate-right"></mat-icon>
       Erneut versuchen
     </button>
   </div>
 } @else {
-  <h1 class="page-title">Rezepte entdecken</h1>
+  <div class="browse-banner">
+    <h1 class="page-title">Rezepte entdecken</h1>
+    <p class="banner-photo-credit">
+      Foto: PattayaPatrol via
+      <a href="https://commons.wikimedia.org/wiki/File:DFC_2101_Vivid_purple_round_eggplants_piled_with_fresh_green_beans_and_cucumbers_at_a_market_stall.jpg" target="_blank" rel="noopener">Wikimedia Commons</a>
+      (CC BY-SA 4.0)
+    </p>
+  </div>
   @if (types().length === 0) {
     <div class="state-container">
-      <mat-icon class="state-icon">inbox</mat-icon>
+      <mat-icon class="state-icon" fontSet="fa-solid" fontIcon="fa-inbox"></mat-icon>
       <p>Noch keine Typen vorhanden.</p>
     </div>
   } @else {
     <div class="browse-grid">
       @for (type of types(); track type.id) {
         <a class="browse-card" [routerLink]="['/recipes/type', type.id]">
-          <mat-icon class="browse-icon">label</mat-icon>
+          <mat-icon class="browse-icon" fontSet="fa-solid" fontIcon="fa-utensils"></mat-icon>
           <span class="browse-name">{{ type.name }}</span>
         </a>
       }

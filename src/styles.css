@@ -1,1 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Font Awesome icons inherit a smaller ambient font-size than Material's own
+   icon font, so their glyph sits at the top of the fixed 24px icon box
+   instead of filling it. Center the glyph within the box to line it up with
+   adjacent text. */
+mat-icon[fontset="fa-solid"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

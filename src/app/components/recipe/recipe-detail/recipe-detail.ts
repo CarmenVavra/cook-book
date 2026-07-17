@@ -1,7 +1,7 @@
-import { isPlatformBrowser } from '@angular/common';
+import { Location, isPlatformBrowser } from '@angular/common';
 import { Component, DestroyRef, PLATFORM_ID, effect, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { forkJoin, of } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,7 +18,7 @@ import { CategoryService } from '../../category/services/category-service';
 
 @Component({
   selector: 'app-recipe-detail',
-  imports: [RouterLink, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [MatButtonModule, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './recipe-detail.html',
   styleUrl: './recipe-detail.css',
 })
@@ -40,6 +40,7 @@ export class RecipeDetail {
   #dialog = inject(MatDialog);
   #destroyRef = inject(DestroyRef);
   #router = inject(Router);
+  #location = inject(Location);
 
   constructor() {
     effect(() => {
@@ -49,6 +50,10 @@ export class RecipeDetail {
 
   reload(): void {
     this.load(Number(this.id()));
+  }
+
+  goBack(): void {
+    this.#location.back();
   }
 
   isOwner(): boolean {
