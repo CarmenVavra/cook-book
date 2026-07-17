@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -22,6 +23,7 @@ export interface RecipeFormData {
   imports: [
     MatDialogModule,
     MatButtonModule,
+    MatCheckboxModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -47,6 +49,19 @@ export class RecipeForm {
   protected readonly recipeForm = form(this.model, (f) => {
     required(f.title, { message: 'Titel ist erforderlich' });
   });
+
+  protected isCategorySelected(categoryId: number): boolean {
+    return this.model().categoryIds.includes(categoryId);
+  }
+
+  protected toggleCategory(categoryId: number, checked: boolean): void {
+    this.model.update((current) => ({
+      ...current,
+      categoryIds: checked
+        ? [...current.categoryIds, categoryId]
+        : current.categoryIds.filter((id) => id !== categoryId),
+    }));
+  }
 
   protected onSubmit(event: Event): void {
     event.preventDefault();

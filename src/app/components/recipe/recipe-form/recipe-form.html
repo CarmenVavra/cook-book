@@ -35,14 +35,19 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Kategorien</mat-label>
-      <mat-select [formField]="recipeForm.categoryIds" multiple>
+    <div class="category-group">
+      <span class="category-label">Kategorien</span>
+      <div class="category-options">
         @for (category of data.categories; track category.id) {
-          <mat-option [value]="category.id">{{ category.name }}</mat-option>
+          <mat-checkbox
+            [checked]="isCategorySelected(category.id)"
+            (change)="toggleCategory(category.id, $event.checked)"
+          >
+            {{ category.name }}
+          </mat-checkbox>
         }
-      </mat-select>
-    </mat-form-field>
+      </div>
+    </div>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">

@@ -8,3 +8,20 @@
 .full-width {
   width: 100%;
 }
+
+.category-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 8px 0 16px;
+}
+
+.category-label {
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.category-options {
+  display: flex;
+  flex-direction: column;
+}
