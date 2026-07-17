@@ -60,6 +60,11 @@
   border-radius: 999px;
 }
 
+.row-actions {
+  display: flex;
+  gap: 4px;
+}
+
 .row-chevron {
   color: var(--mat-sys-on-surface-variant);
 }

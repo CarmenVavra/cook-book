@@ -25,6 +25,11 @@
   font: var(--mat-sys-headline-medium);
 }
 
+.header-actions {
+  display: flex;
+  gap: 4px;
+}
+
 .meta-row {
   display: flex;
   flex-wrap: wrap;
