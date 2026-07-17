@@ -49,9 +49,17 @@
     <ul class="ingredient-list">
       @for (ingredient of recipe()!.ingredients; track ingredient.id) {
         <li>
-          {{ ingredient.name }}
-          @if (ingredient.unitName) {
-            <span class="unit">({{ ingredient.unitName }})</span>
+          @if (ingredient.amount != null) {
+            <span class="amount">{{ ingredient.amount }}</span>
+            @if (ingredient.unitName) {
+              <span class="unit">{{ ingredient.unitName }}</span>
+            }
+            {{ ingredient.name }}
+          } @else {
+            {{ ingredient.name }}
+            @if (ingredient.unitName) {
+              <span class="unit">({{ ingredient.unitName }})</span>
+            }
           }
         </li>
       }

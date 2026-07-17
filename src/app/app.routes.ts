@@ -3,6 +3,7 @@ import { Home } from './components/home/home';
 import { Category } from './components/category/category';
 import { Country } from './components/country/country';
 import { Type } from './components/type/type';
+import { Ingredient } from './components/ingredient/ingredient';
 import { RecipeTypes } from './components/recipe/recipe-types/recipe-types';
 import { RecipeCategories } from './components/recipe/recipe-categories/recipe-categories';
 import { RecipeList } from './components/recipe/recipe-list/recipe-list';
@@ -13,6 +14,7 @@ export const routes: Routes = [
   { path: "category", component: Category },
   { path: "country", component: Country },
   { path: "type", component: Type },
+  { path: "ingredient", component: Ingredient },
   { path: "my-recipes", component: MyRecipes },
   { path: "my-recipes/:id", component: RecipeDetail },
   { path: "recipes/type/:typeId/category/:categoryId", component: RecipeList },

@@ -3,19 +3,22 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { MatSelectModule, MatSelectChange } from '@angular/material/select';
 import { FormField, form, required } from '@angular/forms/signals';
-import { RecipeDetail, RecipeRequest } from '../models/recipe.model';
+import { RecipeDetail, RecipeIngredientRequest, RecipeRequest } from '../models/recipe.model';
 import { Country } from '../../country/models/country.model';
 import { Type } from '../../type/models/type.model';
 import { Category } from '../../category/models/category.model';
+import { Ingredient } from '../../ingredient/models/ingredient.model';
 
 export interface RecipeFormData {
   recipe: RecipeDetail | null;
   countries: Country[];
   types: Type[];
   categories: Category[];
+  ingredients: Ingredient[];
 }
 
 @Component({
@@ -25,6 +28,7 @@ export interface RecipeFormData {
     MatButtonModule,
     MatCheckboxModule,
     MatFormFieldModule,
+    MatIconModule,
     MatInputModule,
     MatSelectModule,
     FormField,
@@ -44,6 +48,10 @@ export class RecipeForm {
     countryId: this.data.recipe?.countryId ?? null,
     typeId: this.data.recipe?.typeId ?? null,
     categoryIds: this.data.recipe?.categories.map((category) => category.id) ?? [],
+    ingredients: this.data.recipe?.ingredients.map((ingredient) => ({
+      ingredientId: ingredient.id,
+      amount: ingredient.amount,
+    })) ?? [],
   });
 
   protected readonly recipeForm = form(this.model, (f) => {
@@ -60,6 +68,39 @@ export class RecipeForm {
       categoryIds: checked
         ? [...current.categoryIds, categoryId]
         : current.categoryIds.filter((id) => id !== categoryId),
+    }));
+  }
+
+  protected addIngredientRow(): void {
+    const firstIngredient = this.data.ingredients[0];
+    if (!firstIngredient) return;
+
+    this.model.update((current) => ({
+      ...current,
+      ingredients: [...current.ingredients, { ingredientId: firstIngredient.id, amount: null }],
+    }));
+  }
+
+  protected removeIngredientRow(index: number): void {
+    this.model.update((current) => ({
+      ...current,
+      ingredients: current.ingredients.filter((_, i) => i !== index),
+    }));
+  }
+
+  protected onIngredientChange(index: number, event: MatSelectChange): void {
+    this.updateIngredientRow(index, { ingredientId: event.value });
+  }
+
+  protected onAmountChange(index: number, event: Event): void {
+    const raw = (event.target as HTMLInputElement).value;
+    this.updateIngredientRow(index, { amount: raw === '' ? null : Number(raw) });
+  }
+
+  private updateIngredientRow(index: number, changes: Partial<RecipeIngredientRequest>): void {
+    this.model.update((current) => ({
+      ...current,
+      ingredients: current.ingredients.map((row, i) => (i === index ? { ...row, ...changes } : row)),
     }));
   }
 

@@ -1,0 +1,67 @@
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  margin: 0;
+  font: var(--mat-sys-headline-medium);
+}
+
+.entity-list {
+  padding: 8px 0;
+}
+
+.entity-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.entity-row:last-child {
+  border-bottom: none;
+}
+
+.row-icon {
+  color: var(--mat-sys-primary);
+}
+
+.row-name {
+  flex: 1 1 auto;
+  font: var(--mat-sys-body-large);
+}
+
+.row-badge {
+  font: var(--mat-sys-label-small);
+  color: var(--mat-sys-on-surface-variant);
+  background: var(--mat-sys-surface-container-high);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.row-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 64px 16px;
+  color: var(--mat-sys-on-surface-variant);
+  text-align: center;
+}
+
+.state-icon {
+  width: 48px;
+  height: 48px;
+  font-size: 48px;
+}

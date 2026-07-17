@@ -7,6 +7,12 @@ export interface IngredientRef {
   id: number;
   name: string;
   unitName: string | null;
+  amount: number | null;
+}
+
+export interface RecipeIngredientRequest {
+  ingredientId: number;
+  amount: number | null;
 }
 
 export interface RecipeSummary {
@@ -31,4 +37,5 @@ export interface RecipeRequest {
   countryId: number | null;
   typeId: number | null;
   categoryIds: number[];
+  ingredients: RecipeIngredientRequest[];
 }

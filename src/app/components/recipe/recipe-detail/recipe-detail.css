@@ -64,6 +64,10 @@
   margin-bottom: 4px;
 }
 
+.amount {
+  font-weight: 500;
+}
+
 .unit {
   color: var(--mat-sys-on-surface-variant);
 }

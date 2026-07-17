@@ -48,6 +48,37 @@
         }
       </div>
     </div>
+
+    <div class="ingredient-group">
+      <span class="ingredient-label">Zutaten</span>
+      @if (data.ingredients.length === 0) {
+        <p class="ingredient-hint">Noch keine Zutaten angelegt. Lege zuerst welche unter "Zutaten" an.</p>
+      } @else {
+        @for (row of model().ingredients; track $index; let i = $index) {
+          <div class="ingredient-row">
+            <mat-form-field appearance="outline" class="ingredient-select">
+              <mat-label>Zutat</mat-label>
+              <mat-select [value]="row.ingredientId" (selectionChange)="onIngredientChange(i, $event)">
+                @for (ingredient of data.ingredients; track ingredient.id) {
+                  <mat-option [value]="ingredient.id">{{ ingredient.name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="ingredient-amount">
+              <mat-label>Menge</mat-label>
+              <input matInput type="number" [value]="row.amount" (input)="onAmountChange(i, $event)" />
+            </mat-form-field>
+            <button mat-icon-button type="button" (click)="removeIngredientRow(i)" aria-label="Zutat entfernen">
+              <mat-icon fontSet="fa-solid" fontIcon="fa-xmark"></mat-icon>
+            </button>
+          </div>
+        }
+        <button mat-button type="button" (click)="addIngredientRow()">
+          <mat-icon fontSet="fa-solid" fontIcon="fa-plus"></mat-icon>
+          Zutat hinzufügen
+        </button>
+      }
+    </div>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">

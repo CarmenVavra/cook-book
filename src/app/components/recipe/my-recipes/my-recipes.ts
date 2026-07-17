@@ -20,6 +20,8 @@ import { Type } from '../../type/models/type.model';
 import { TypeService } from '../../type/services/type-service';
 import { Category } from '../../category/models/category.model';
 import { CategoryService } from '../../category/services/category-service';
+import { Ingredient } from '../../ingredient/models/ingredient.model';
+import { IngredientService } from '../../ingredient/services/ingredient-service';
 
 @Component({
   selector: 'app-my-recipes',
@@ -43,6 +45,7 @@ export class MyRecipes {
   readonly types = signal<Type[]>([]);
   readonly countries = signal<Country[]>([]);
   readonly categories = signal<Category[]>([]);
+  readonly ingredients = signal<Ingredient[]>([]);
 
   readonly typeFilter = signal<number | null>(null);
   readonly countryFilter = signal<number | null>(null);
@@ -76,6 +79,7 @@ export class MyRecipes {
   #countryService = inject(CountryService);
   #typeService = inject(TypeService);
   #categoryService = inject(CategoryService);
+  #ingredientService = inject(IngredientService);
   #logger = inject(LoggerService);
   #dialog = inject(MatDialog);
   #destroyRef = inject(DestroyRef);
@@ -114,6 +118,7 @@ export class MyRecipes {
         countries: this.countries(),
         types: this.types(),
         categories: this.categories(),
+        ingredients: this.ingredients(),
       },
     });
 
@@ -158,13 +163,15 @@ export class MyRecipes {
       countries: this.#countryService.getAll(),
       types: this.#typeService.getAll(),
       categories: this.#categoryService.getAll(),
+      ingredients: this.#ingredientService.getAll(),
     })
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
-        next: ({ countries, types, categories }) => {
+        next: ({ countries, types, categories, ingredients }) => {
           this.countries.set(countries);
           this.types.set(types);
           this.categories.set(categories);
+          this.ingredients.set(ingredients);
         },
         error: (error) => {
           this.#logger.error('Failed to load filter options for the my-recipes page', error);
