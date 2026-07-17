@@ -26,10 +26,53 @@
     </button>
   </div>
 
+  <div class="filter-bar">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Typ</mat-label>
+      <mat-select [value]="typeFilter()" (selectionChange)="onTypeFilterChange($event)">
+        <mat-option [value]="null">Alle</mat-option>
+        @for (type of types(); track type.id) {
+          <mat-option [value]="type.id">{{ type.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Kategorie</mat-label>
+      <mat-select [value]="categoryFilter()" (selectionChange)="onCategoryFilterChange($event)">
+        <mat-option [value]="null">Alle</mat-option>
+        @for (category of categories(); track category.id) {
+          <mat-option [value]="category.id">{{ category.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Land</mat-label>
+      <mat-select [value]="countryFilter()" (selectionChange)="onCountryFilterChange($event)">
+        <mat-option [value]="null">Alle</mat-option>
+        @for (country of countries(); track country.id) {
+          <mat-option [value]="country.id">{{ country.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if (hasActiveFilter()) {
+      <button mat-button type="button" (click)="resetFilters()">
+        <mat-icon>close</mat-icon>
+        Filter zurücksetzen
+      </button>
+    }
+  </div>
+
   @if (myRecipes().length === 0) {
     <div class="state-container">
       <mat-icon class="state-icon">inbox</mat-icon>
-      <p>Du hast noch keine eigenen Rezepte.</p>
+      @if (hasActiveFilter()) {
+        <p>Keine Rezepte für diese Filterauswahl.</p>
+      } @else {
+        <p>Du hast noch keine eigenen Rezepte.</p>
+      }
     </div>
   } @else {
     <div class="recipe-list">

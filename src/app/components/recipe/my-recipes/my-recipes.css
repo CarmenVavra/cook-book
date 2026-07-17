@@ -11,6 +11,18 @@
   font: var(--mat-sys-headline-medium);
 }
 
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.filter-field {
+  width: 160px;
+}
+
 .recipe-list {
   display: flex;
   flex-direction: column;
