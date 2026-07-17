@@ -9,16 +9,6 @@
         <mat-error>{{ ingredientForm.name().errors()[0]?.message }}</mat-error>
       }
     </mat-form-field>
-
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Einheit</mat-label>
-      <mat-select [formField]="ingredientForm.unitId">
-        <mat-option [value]="null">(keine Einheit)</mat-option>
-        @for (unit of units; track unit.id) {
-          <mat-option [value]="unit.id">{{ unit.name }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">

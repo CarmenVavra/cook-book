@@ -66,10 +66,12 @@
 
 .amount {
   font-weight: 500;
+  margin-right: 12px;
 }
 
 .unit {
   color: var(--mat-sys-on-surface-variant);
+  margin-right: 8px;
 }
 
 .recipe-text {

@@ -2,11 +2,23 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-width: 320px;
+  width: 560px;
+  max-width: 100%;
+  max-height: 75vh;
 }
 
 .full-width {
   width: 100%;
+}
+
+.field-row {
+  display: flex;
+  gap: 16px;
+}
+
+.field-half {
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .category-group {
@@ -23,7 +35,9 @@
 
 .category-options {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 4px 16px;
 }
 
 .ingredient-group {
@@ -55,6 +69,11 @@
 }
 
 .ingredient-amount {
-  width: 100px;
+  width: 90px;
+  flex: 0 0 auto;
+}
+
+.ingredient-unit {
+  width: 110px;
   flex: 0 0 auto;
 }

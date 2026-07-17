@@ -22,6 +22,8 @@ import { Category } from '../../category/models/category.model';
 import { CategoryService } from '../../category/services/category-service';
 import { Ingredient } from '../../ingredient/models/ingredient.model';
 import { IngredientService } from '../../ingredient/services/ingredient-service';
+import { Unit } from '../../unit/models/unit.model';
+import { UnitService } from '../../unit/services/unit-service';
 
 @Component({
   selector: 'app-my-recipes',
@@ -46,6 +48,7 @@ export class MyRecipes {
   readonly countries = signal<Country[]>([]);
   readonly categories = signal<Category[]>([]);
   readonly ingredients = signal<Ingredient[]>([]);
+  readonly units = signal<Unit[]>([]);
 
   readonly typeFilter = signal<number | null>(null);
   readonly countryFilter = signal<number | null>(null);
@@ -80,6 +83,7 @@ export class MyRecipes {
   #typeService = inject(TypeService);
   #categoryService = inject(CategoryService);
   #ingredientService = inject(IngredientService);
+  #unitService = inject(UnitService);
   #logger = inject(LoggerService);
   #dialog = inject(MatDialog);
   #destroyRef = inject(DestroyRef);
@@ -119,6 +123,7 @@ export class MyRecipes {
         types: this.types(),
         categories: this.categories(),
         ingredients: this.ingredients(),
+        units: this.units(),
       },
     });
 
@@ -164,14 +169,16 @@ export class MyRecipes {
       types: this.#typeService.getAll(),
       categories: this.#categoryService.getAll(),
       ingredients: this.#ingredientService.getAll(),
+      units: this.#unitService.getAll(),
     })
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
-        next: ({ countries, types, categories, ingredients }) => {
+        next: ({ countries, types, categories, ingredients, units }) => {
           this.countries.set(countries);
           this.types.set(types);
           this.categories.set(categories);
           this.ingredients.set(ingredients);
+          this.units.set(units);
         },
         error: (error) => {
           this.#logger.error('Failed to load filter options for the my-recipes page', error);

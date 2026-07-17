@@ -6,12 +6,15 @@ export interface CategoryRef {
 export interface IngredientRef {
   id: number;
   name: string;
+  unitId: number | null;
   unitName: string | null;
+  unitNameShort: string | null;
   amount: number | null;
 }
 
 export interface RecipeIngredientRequest {
   ingredientId: number;
+  unitId: number | null;
   amount: number | null;
 }
 

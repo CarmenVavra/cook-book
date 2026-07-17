@@ -11,8 +11,6 @@ import { LoggerService } from '../../core/logging/logger-service';
 import { IngredientForm } from './ingredient-form/ingredient-form';
 import { Ingredient as IngredientModel, IngredientRequest } from './models/ingredient.model';
 import { IngredientService } from './services/ingredient-service';
-import { Unit } from '../unit/models/unit.model';
-import { UnitService } from '../unit/services/unit-service';
 
 @Component({
   selector: 'app-ingredient',
@@ -22,21 +20,18 @@ import { UnitService } from '../unit/services/unit-service';
 })
 export class Ingredient {
   readonly ingredients = signal<IngredientModel[]>([]);
-  readonly units = signal<Unit[]>([]);
   readonly loading = signal(true);
   readonly error = signal(false);
 
   protected auth: AuthService | null = isPlatformBrowser(inject(PLATFORM_ID)) ? inject(AuthService) : null;
 
   #ingredientService = inject(IngredientService);
-  #unitService = inject(UnitService);
   #logger = inject(LoggerService);
   #dialog = inject(MatDialog);
   #destroyRef = inject(DestroyRef);
 
   constructor() {
     this.load();
-    this.loadUnits();
   }
 
   reload(): void {
@@ -69,7 +64,7 @@ export class Ingredient {
 
   private openDialog(ingredient: IngredientModel | null): void {
     const dialogRef = this.#dialog.open(IngredientForm, {
-      data: { ingredient, units: this.units() },
+      data: { ingredient },
     });
 
     dialogRef.afterClosed()
@@ -107,15 +102,6 @@ export class Ingredient {
           this.error.set(true);
           this.loading.set(false);
         },
-      });
-  }
-
-  private loadUnits(): void {
-    this.#unitService.getAll()
-      .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe({
-        next: (units) => this.units.set(units),
-        error: (error) => this.#logger.error('Failed to load units for ingredient form', error),
       });
   }
 }

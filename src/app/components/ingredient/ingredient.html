@@ -34,9 +34,6 @@
         <div class="entity-row">
           <mat-icon class="row-icon" fontSet="fa-solid" fontIcon="fa-carrot"></mat-icon>
           <span class="row-name">{{ ingredient.name }}</span>
-          @if (ingredient.unitName) {
-            <span class="row-badge">{{ ingredient.unitName }}</span>
-          }
           @if (auth && (auth.isAuthenticated$ | async)) {
             <span class="row-actions">
               <button mat-icon-button type="button" (click)="openEditDialog(ingredient)" aria-label="Bearbeiten">

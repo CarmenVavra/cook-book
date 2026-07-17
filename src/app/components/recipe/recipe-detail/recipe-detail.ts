@@ -15,6 +15,7 @@ import { CountryService } from '../../country/services/country-service';
 import { TypeService } from '../../type/services/type-service';
 import { CategoryService } from '../../category/services/category-service';
 import { IngredientService } from '../../ingredient/services/ingredient-service';
+import { UnitService } from '../../unit/services/unit-service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -37,6 +38,7 @@ export class RecipeDetail {
   #typeService = inject(TypeService);
   #categoryService = inject(CategoryService);
   #ingredientService = inject(IngredientService);
+  #unitService = inject(UnitService);
   #logger = inject(LoggerService);
   #dialog = inject(MatDialog);
   #destroyRef = inject(DestroyRef);
@@ -70,6 +72,7 @@ export class RecipeDetail {
       types: this.#typeService.getAll(),
       categories: this.#categoryService.getAll(),
       ingredients: this.#ingredientService.getAll(),
+      units: this.#unitService.getAll(),
     })
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({

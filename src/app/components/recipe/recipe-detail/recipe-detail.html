@@ -51,16 +51,11 @@
         <li>
           @if (ingredient.amount != null) {
             <span class="amount">{{ ingredient.amount }}</span>
-            @if (ingredient.unitName) {
-              <span class="unit">{{ ingredient.unitName }}</span>
-            }
-            {{ ingredient.name }}
-          } @else {
-            {{ ingredient.name }}
-            @if (ingredient.unitName) {
-              <span class="unit">({{ ingredient.unitName }})</span>
-            }
           }
+          @if (ingredient.unitNameShort ?? ingredient.unitName; as unitDisplay) {
+            <span class="unit">{{ unitDisplay }}</span>
+          }
+          <span class="ingredient-name">{{ ingredient.name }}</span>
         </li>
       }
     </ul>

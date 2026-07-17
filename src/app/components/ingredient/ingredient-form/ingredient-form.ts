@@ -3,14 +3,11 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { FormField, form, required } from '@angular/forms/signals';
 import { Ingredient, IngredientRequest } from '../models/ingredient.model';
-import { Unit } from '../../unit/models/unit.model';
 
 export interface IngredientFormData {
   ingredient: Ingredient | null;
-  units: Unit[];
 }
 
 @Component({
@@ -20,7 +17,6 @@ export interface IngredientFormData {
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule,
     FormField,
   ],
   templateUrl: './ingredient-form.html',
@@ -31,11 +27,9 @@ export class IngredientForm {
   #data = inject<IngredientFormData>(MAT_DIALOG_DATA);
 
   protected readonly isEdit = this.#data.ingredient !== null;
-  protected readonly units = this.#data.units;
 
   protected readonly model = signal<IngredientRequest>({
     name: this.#data.ingredient?.name ?? '',
-    unitId: this.#data.ingredient?.unitId ?? null,
   });
 
   protected readonly ingredientForm = form(this.model, (f) => {

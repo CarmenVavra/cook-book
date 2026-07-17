@@ -10,30 +10,27 @@
       }
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Zubereitung</mat-label>
-      <textarea matInput rows="6" [formField]="recipeForm.text"></textarea>
-    </mat-form-field>
+    <div class="field-row">
+      <mat-form-field appearance="outline" class="field-half">
+        <mat-label>Land</mat-label>
+        <mat-select [formField]="recipeForm.countryId">
+          <mat-option [value]="null">(kein Land)</mat-option>
+          @for (country of data.countries; track country.id) {
+            <mat-option [value]="country.id">{{ country.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Land</mat-label>
-      <mat-select [formField]="recipeForm.countryId">
-        <mat-option [value]="null">(kein Land)</mat-option>
-        @for (country of data.countries; track country.id) {
-          <mat-option [value]="country.id">{{ country.name }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Typ</mat-label>
-      <mat-select [formField]="recipeForm.typeId">
-        <mat-option [value]="null">(kein Typ)</mat-option>
-        @for (type of data.types; track type.id) {
-          <mat-option [value]="type.id">{{ type.name }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+      <mat-form-field appearance="outline" class="field-half">
+        <mat-label>Typ</mat-label>
+        <mat-select [formField]="recipeForm.typeId">
+          <mat-option [value]="null">(kein Typ)</mat-option>
+          @for (type of data.types; track type.id) {
+            <mat-option [value]="type.id">{{ type.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
 
     <div class="category-group">
       <span class="category-label">Kategorien</span>
@@ -68,6 +65,15 @@
               <mat-label>Menge</mat-label>
               <input matInput type="number" [value]="row.amount" (input)="onAmountChange(i, $event)" />
             </mat-form-field>
+            <mat-form-field appearance="outline" class="ingredient-unit">
+              <mat-label>Einheit</mat-label>
+              <mat-select [value]="row.unitId" (selectionChange)="onUnitChange(i, $event)">
+                <mat-option [value]="null">–</mat-option>
+                @for (unit of data.units; track unit.id) {
+                  <mat-option [value]="unit.id">{{ unit.name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
             <button mat-icon-button type="button" (click)="removeIngredientRow(i)" aria-label="Zutat entfernen">
               <mat-icon fontSet="fa-solid" fontIcon="fa-xmark"></mat-icon>
             </button>
@@ -79,6 +85,11 @@
         </button>
       }
     </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Zubereitung</mat-label>
+      <textarea matInput rows="5" [formField]="recipeForm.text"></textarea>
+    </mat-form-field>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">

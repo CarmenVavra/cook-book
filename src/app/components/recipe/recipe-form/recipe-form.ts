@@ -12,6 +12,7 @@ import { Country } from '../../country/models/country.model';
 import { Type } from '../../type/models/type.model';
 import { Category } from '../../category/models/category.model';
 import { Ingredient } from '../../ingredient/models/ingredient.model';
+import { Unit } from '../../unit/models/unit.model';
 
 export interface RecipeFormData {
   recipe: RecipeDetail | null;
@@ -19,6 +20,7 @@ export interface RecipeFormData {
   types: Type[];
   categories: Category[];
   ingredients: Ingredient[];
+  units: Unit[];
 }
 
 @Component({
@@ -50,6 +52,7 @@ export class RecipeForm {
     categoryIds: this.data.recipe?.categories.map((category) => category.id) ?? [],
     ingredients: this.data.recipe?.ingredients.map((ingredient) => ({
       ingredientId: ingredient.id,
+      unitId: ingredient.unitId,
       amount: ingredient.amount,
     })) ?? [],
   });
@@ -77,7 +80,7 @@ export class RecipeForm {
 
     this.model.update((current) => ({
       ...current,
-      ingredients: [...current.ingredients, { ingredientId: firstIngredient.id, amount: null }],
+      ingredients: [...current.ingredients, { ingredientId: firstIngredient.id, unitId: null, amount: null }],
     }));
   }
 
@@ -90,6 +93,10 @@ export class RecipeForm {
 
   protected onIngredientChange(index: number, event: MatSelectChange): void {
     this.updateIngredientRow(index, { ingredientId: event.value });
+  }
+
+  protected onUnitChange(index: number, event: MatSelectChange): void {
+    this.updateIngredientRow(index, { unitId: event.value });
   }
 
   protected onAmountChange(index: number, event: Event): void {
