@@ -52,12 +52,6 @@
   color: var(--mat-sys-on-surface-variant);
 }
 
-.ingredient-hint {
-  margin: 0;
-  color: var(--mat-sys-on-surface-variant);
-  font: var(--mat-sys-body-medium);
-}
-
 .ingredient-row {
   display: flex;
   align-items: flex-start;
@@ -76,4 +70,8 @@
 .ingredient-unit {
   width: 110px;
   flex: 0 0 auto;
+}
+
+.ingredient-add-button {
+  align-self: flex-end;
 }
