@@ -1,5 +1,6 @@
 package com.caryssa.book.cookbook.dtos;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
@@ -12,7 +13,9 @@ public class RecipeRequest {
     private Integer countryId;
     private Integer typeId;
     private List<Integer> categoryIds;
-    private List<Integer> ingredientIds;
+
+    @Valid
+    private List<RecipeIngredientRequest> ingredients;
 
     public String getTitle() {
         return title;
@@ -54,11 +57,11 @@ public class RecipeRequest {
         this.categoryIds = categoryIds;
     }
 
-    public List<Integer> getIngredientIds() {
-        return ingredientIds;
+    public List<RecipeIngredientRequest> getIngredients() {
+        return ingredients;
     }
 
-    public void setIngredientIds(List<Integer> ingredientIds) {
-        this.ingredientIds = ingredientIds;
+    public void setIngredients(List<RecipeIngredientRequest> ingredients) {
+        this.ingredients = ingredients;
     }
 }

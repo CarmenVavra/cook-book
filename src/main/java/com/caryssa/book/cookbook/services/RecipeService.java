@@ -3,12 +3,14 @@ package com.caryssa.book.cookbook.services;
 import com.caryssa.book.cookbook.dtos.CategoryRefDTO;
 import com.caryssa.book.cookbook.dtos.IngredientRefDTO;
 import com.caryssa.book.cookbook.dtos.RecipeDetailDTO;
+import com.caryssa.book.cookbook.dtos.RecipeIngredientRequest;
 import com.caryssa.book.cookbook.dtos.RecipeRequest;
 import com.caryssa.book.cookbook.dtos.RecipeSummaryDTO;
 import com.caryssa.book.cookbook.entities.Category;
 import com.caryssa.book.cookbook.entities.Country;
 import com.caryssa.book.cookbook.entities.Ingredient;
 import com.caryssa.book.cookbook.entities.Recipe;
+import com.caryssa.book.cookbook.entities.RecipeIngredient;
 import com.caryssa.book.cookbook.entities.Type;
 import com.caryssa.book.cookbook.exceptions.BadRequestException;
 import com.caryssa.book.cookbook.exceptions.ForbiddenException;
@@ -130,15 +132,24 @@ public class RecipeService {
         }
         recipe.setCategories(categories);
 
-        Set<Ingredient> ingredients = new HashSet<>();
-        if (request.getIngredientIds() != null) {
-            for (Integer ingredientId : request.getIngredientIds()) {
-                ingredients.add(ingredientRepository.findById(ingredientId)
+        List<RecipeIngredient> recipeIngredients = recipe.getRecipeIngredients();
+        if (recipeIngredients == null) {
+            recipeIngredients = new ArrayList<>();
+            recipe.setRecipeIngredients(recipeIngredients);
+        }
+        recipeIngredients.clear();
+        if (request.getIngredients() != null) {
+            for (RecipeIngredientRequest ingredientRequest : request.getIngredients()) {
+                Ingredient ingredient = ingredientRepository.findById(ingredientRequest.getIngredientId())
                         .orElseThrow(() -> new BadRequestException(
-                                "ingredientId " + ingredientId + " verweist auf keine existierende Zutat.")));
+                                "ingredientId " + ingredientRequest.getIngredientId() + " verweist auf keine existierende Zutat."));
+                RecipeIngredient link = new RecipeIngredient();
+                link.setRecipe(recipe);
+                link.setIngredient(ingredient);
+                link.setAmount(ingredientRequest.getAmount());
+                recipeIngredients.add(link);
             }
         }
-        recipe.setIngredients(ingredients);
     }
 
     private RecipeSummaryDTO toSummaryDto(Recipe recipe) {
@@ -168,10 +179,11 @@ public class RecipeService {
         RecipeSummaryDTO summary = toSummaryDto(recipe);
 
         List<IngredientRefDTO> ingredientRefs = new ArrayList<>();
-        if (recipe.getIngredients() != null) {
-            for (Ingredient ingredient : recipe.getIngredients()) {
+        if (recipe.getRecipeIngredients() != null) {
+            for (RecipeIngredient link : recipe.getRecipeIngredients()) {
+                Ingredient ingredient = link.getIngredient();
                 String unitName = ingredient.getUnit() != null ? ingredient.getUnit().getName() : null;
-                ingredientRefs.add(new IngredientRefDTO(ingredient.getId(), ingredient.getName(), unitName));
+                ingredientRefs.add(new IngredientRefDTO(ingredient.getId(), ingredient.getName(), unitName, link.getAmount()));
             }
         }
 

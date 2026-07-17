@@ -4,14 +4,16 @@ public class IngredientRefDTO {
     private Integer id;
     private String name;
     private String unitName;
+    private Double amount;
 
     public IngredientRefDTO() {
     }
 
-    public IngredientRefDTO(Integer id, String name, String unitName) {
+    public IngredientRefDTO(Integer id, String name, String unitName, Double amount) {
         this.id = id;
         this.name = name;
         this.unitName = unitName;
+        this.amount = amount;
     }
 
     public Integer getId() {
@@ -36,5 +38,13 @@ public class IngredientRefDTO {
 
     public void setUnitName(String unitName) {
         this.unitName = unitName;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 }
