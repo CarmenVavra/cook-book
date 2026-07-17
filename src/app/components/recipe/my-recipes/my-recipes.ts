@@ -135,7 +135,10 @@ export class MyRecipes {
         this.#recipeService.create({ ...result, categoryIds: result.categoryIds ?? [] })
           .pipe(takeUntilDestroyed(this.#destroyRef))
           .subscribe({
-            next: () => this.load(),
+            next: () => {
+              this.load();
+              this.loadFilterOptions();
+            },
             error: (error) => {
               this.#logger.error('Failed to create recipe', error);
               window.alert('Speichern fehlgeschlagen. Bitte versuche es später erneut.');

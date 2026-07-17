@@ -32,6 +32,8 @@ export const appConfigWithAuth0: ApplicationConfig = {
         redirect_uri: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:4200',
         audience: 'https://cookbook-api',
       },
+      cacheLocation: 'localstorage',
+      useRefreshTokens: true,
       httpInterceptor: {
         allowedList: [{ uri: 'http://localhost:8080/*', allowAnonymous: true }],
       },
