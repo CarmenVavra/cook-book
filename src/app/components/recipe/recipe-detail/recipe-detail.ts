@@ -1,7 +1,6 @@
 import { Location, isPlatformBrowser } from '@angular/common';
 import { Component, DestroyRef, PLATFORM_ID, effect, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { forkJoin, of } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
@@ -39,7 +38,6 @@ export class RecipeDetail {
   #logger = inject(LoggerService);
   #dialog = inject(MatDialog);
   #destroyRef = inject(DestroyRef);
-  #router = inject(Router);
   #location = inject(Location);
 
   constructor() {
@@ -108,7 +106,7 @@ export class RecipeDetail {
     this.#recipeService.delete(recipe.id)
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
-        next: () => this.#router.navigateByUrl('/recipes'),
+        next: () => this.goBack(),
         error: (error) => {
           this.#logger.error('Failed to delete recipe', error);
           window.alert('Löschen fehlgeschlagen. Bitte versuche es später erneut.');

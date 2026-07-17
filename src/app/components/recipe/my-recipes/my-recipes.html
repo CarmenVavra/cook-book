@@ -77,7 +77,7 @@
   } @else {
     <div class="recipe-list">
       @for (recipe of myRecipes(); track recipe.id) {
-        <a class="recipe-row" [routerLink]="['/recipes', recipe.id]">
+        <a class="recipe-row" [routerLink]="['/my-recipes', recipe.id]">
           <mat-icon class="row-icon" fontSet="fa-solid" fontIcon="fa-book-open"></mat-icon>
           <span class="row-name">{{ recipe.title }}</span>
           @if (recipe.countryName) {

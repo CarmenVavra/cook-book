@@ -14,6 +14,7 @@ export const routes: Routes = [
   { path: "country", component: Country },
   { path: "type", component: Type },
   { path: "my-recipes", component: MyRecipes },
+  { path: "my-recipes/:id", component: RecipeDetail },
   { path: "recipes/type/:typeId/category/:categoryId", component: RecipeList },
   { path: "recipes/type/:typeId", component: RecipeCategories },
   { path: "recipes/:id", component: RecipeDetail },
